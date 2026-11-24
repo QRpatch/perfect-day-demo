@@ -13222,12 +13222,12 @@ addEventListener('keydown',function(e){if(done)return;if(e.key==='Enter'||e.key=
 (function () {
   'use strict';
   var BASE = 'musica/', TARGET = -24;                     /* integrated loudness the tracks are matched to (LUFS, measured per track) */
-  var T = {                                                /* file · measured loudness · when the next track takes over (s) */
-    a1: { f: 'mixkit-148.mp3', I: -14.0, next: 138 },      /* Forest Mist Whispers · Alejandro Magaña */
-    a2: { f: 'mixkit-566.mp3', I: -13.3, next: 168 },      /* Daniel & Me · Eugenio Mininni */
-    a3: { f: 'mixkit-584.mp3', I: -15.5, next: 278 },      /* Rest Now · Eugenio Mininni */
-    b1: { f: 'mixkit-184.mp3', I: -10.0, next: 222 },      /* Vastness · Andrew Ev */
-    b2: { f: 'mixkit-585.mp3', I: -12.0, next: 205 }       /* Sonor 07 · Eugenio Mininni */
+  var T = {                                                /* file · measured loudness · when the next track takes over (s) · where it enters (s, past a quiet intro) */
+    a1: { f: 'mixkit-148.mp3', I: -14.0, next: 134, in: 0 },      /* Forest Mist Whispers · Alejandro Magaña */
+    a2: { f: 'mixkit-566.mp3', I: -13.3, next: 166, in: 4 },      /* Daniel & Me · Eugenio Mininni */
+    a3: { f: 'mixkit-584.mp3', I: -15.5, next: 278, in: 8 },      /* Rest Now · Eugenio Mininni */
+    b1: { f: 'mixkit-184.mp3', I: -10.0, next: 214, in: 0 },      /* Vastness · Andrew Ev */
+    b2: { f: 'mixkit-585.mp3', I: -12.0, next: 205, in: 11 }       /* Sonor 07 · Eugenio Mininni */
   };
   var CH = { A: ['a1', 'a2', 'a3'], B: ['b1', 'b2'], C: ['a1'] };
   var C_OFFSET = 8;                                        /* chapter C enters the opening theme 8 s in: its natural ending lands just after the logo */
@@ -13271,13 +13271,13 @@ addEventListener('keydown',function(e){if(done)return;if(e.key==='Enter'||e.key=
     if (chap === c) return; log('chapter', c + ' ' + why);
     var old = cur; chap = c; idx = 0; setTension(0, true); ramp(duck.gain, 1, 1.2);
     fadeOut(old, c === 'A' ? 1.2 : 4);
-    var k = CH[c][0], off = c === 'C' ? C_OFFSET : 0;
+    var k = CH[c][0], off = c === 'C' ? C_OFFSET : T[k].in;
     setTimeout(function () { if (chap === c) play(k, off, c === 'A' ? 3 : 5); }, old && old.busy ? (c === 'A' ? 300 : 1200) : 0);
   }
   function chain() {                                             /* within a chapter: when a track reaches its hand-over point, the next one rises */
     if (!cur || !cur.busy || ended || chap === 'C') return;
     var k = cur.key, t = cur.el.currentTime; if (!T[k] || t < T[k].next) return;
-    var list = CH[chap]; idx = (idx + 1) % list.length; var old = cur; play(list[idx], 0, 6); fadeOut(old, 12);
+    var list = CH[chap]; idx = (idx + 1) % list.length; var old = cur; play(list[idx], T[list[idx]].in, 4); fadeOut(old, 12);
   }
   function setTension(level, quiet) {                            /* 0 open · 1 light · 2 strong */
     tension = level; if (!ctx) return;
@@ -13359,6 +13359,7 @@ addEventListener('keydown',function(e){if(done)return;if(e.key==='Enter'||e.key=
         }); });
       }).observe(nar, { childList: true });
       lastB = -1; setInterval(tick, 200);
+      window.__SOM.seek = function (t) { if (cur) cur.el.currentTime = t; };   /* QA only: move the playing track to t s */
       window.__SOM.ctx = ctx; window.__SOM.an = an; window.__SOM.state = function () { return { chap: chap, key: cur && cur.key, t: cur && cur.el.currentTime, tension: tension, muted: muted, ended: ended, lp: lp.frequency.value, duck: duck.gain.value }; };
       log('start', ctx.state);
     } catch (e) { log('start-err', String(e)); }
