@@ -3581,10 +3581,10 @@ svg.pp-av{border-radius:50%}
 .l5f{position:absolute;inset:0;pointer-events:none}
 .l5f .atm{position:absolute;left:0;top:0;width:1920px;height:1000px;display:block;opacity:0;transition:opacity 1.2s ease}
 .l5f.sb .atm{opacity:1}
-/* a · the human consequence (two lines, one sentence pair: weight contrast, as the opening title) */
+/* a · the human consequence (two lines, one sentence pair, one weight: owner 24 Nov) */
 .l5f .ha{position:absolute;left:0;right:0;top:378px;text-align:center;transition:opacity .8s ease,transform 1s var(--ease),filter .8s ease}
-.l5f .a1{font-size:66px;line-height:1.14;font-weight:640;letter-spacing:-.034em;color:var(--ink)}
-.l5f .a2{font-size:66px;line-height:1.14;font-weight:340;letter-spacing:-.03em;color:#334155;margin-top:6px}
+.l5f .a1,.l5f .a2{font-size:66px;line-height:1.14;font-weight:640;letter-spacing:-.034em;color:var(--ink)}
+.l5f .a2{margin-top:6px}
 .l5f.sb .ha{opacity:0;transform:translateY(-14px);filter:blur(7px)}
 /* b · the ambition */
 .l5f .msg{position:absolute;left:0;right:0;top:392px;text-align:center;transition:opacity .8s ease,transform 1s var(--ease),filter .8s ease}
@@ -6081,7 +6081,7 @@ for (const k of Object.keys(VER)) delete VER[k];
   let SHOWP = /(?:[?&#])pills=1/.test(location.search + location.hash);
   /* P toggles the pills (capture: before the shell's own P handler repaints the bar) */
   addEventListener('keydown', e => { if (!e.metaKey && !e.ctrlKey && !e.altKey && (e.key === 'p' || e.key === 'P')) SHOWP = !SHOWP; }, true);
-  const PILLS = ['title', 't1w', 't1v', 'ico', 'ad', 'adp', 'nar', 't4b', 't5w', 't5mm', 't5x', 't5c'];   /* REV4 s4b: disc · t4o · t4s retired with the ranked list (§33) */
+  const PILLS = ['title', 't1w', 't1v', 'ico', 'ad', 'adp', 'nar', 't4b', 't5w', 't5mm', 't5x'];   /* REV4 s4b: disc · t4o · t4s retired with the ranked list (§33) */
   const at = id => () => { const i = BEATS.findIndex(d => d.id === id); return i >= 0 ? i : 0; };
   window.RV = {
     get keys() { return SHOWP ? ['__p', ...PILLS] : ['__p']; },
@@ -10943,8 +10943,8 @@ window.__PFX="60";
          texts never mix), the pile grows from the middle outward and never enters the clock's zone → 15:01 Antônio: the freeze (kept)
          → calma (§30): 1 s on the frozen frame → his card lifts into the phone while the clock steps back to the shell's #clock (60-2
          runs on it), same 1,12-s curve, handed over on identical pixels.
-   FINAL (Alexandre 23 Nov, BRIEF-FINAL item 10): on the settled clock the minutes run 08:01 · 08:02 · 08:03 · 08:04, then faster and
-         faster to 08:12 (TICK) → TRODAT pops in the CENTRE (CEN), read ≈ 5 s, glides to its place in the pile just before 14:36 · Beatriz
+   FINAL (Alexandre 23 Nov, BRIEF-FINAL item 10; 24 Nov: shorter): on the settled clock the minutes run 08:01 · 08:02 · 08:03, then
+         quickly faster to 08:12 (TICK) → TRODAT pops in the CENTRE (CEN), read ≈ 5 s, glides to its place in the pile just before 14:36 · Beatriz
          (her arrival unchanged) → longer readings for Beatriz and the third → from the fourth on faster and faster (GAPS) down to the same
          floor; the clock's jumps, the pile, the freeze and the phone are unchanged.
    The flood is painted by one rAF painter, a pure function of the sequence time t (frozen at Antônio's arrival); clicks land on the next key
@@ -11141,10 +11141,10 @@ window.__PFX="60";
   const CLOCK = { x: 48, y: 20, cy: 380, sd: 2.3, st: 6.2, gap: 18, dur: 1150 };   /* REV4 §27: VERY large in the centre (time ×6,2 ≈ 155 px; was ×5,2) */
   const UL = { x: 148, y: 132, sd: 1.85, st: 4.3, gap: 0 };             /* the settled pose: date ×1,85 (≈ 20 px) · time ×4,3 (≈ 107 px) */
   const CKT = { HOLD: 1150, MOVE: 1750 };                                 /* the centre held · the movement */
-  /* FINAL item 10: on the settled clock the minutes run 08:01 · 08:02 · 08:03 · 08:04 at a steady pace, then faster and faster up to 08:12,
-     where TRODAT pops (centred). TICK[k] = the wait before minute k + 1 (the first one = the settled pause on 08:00; was 520 ms, then one
+  /* FINAL item 10: on the settled clock the minutes run 08:01 · 08:02 · 08:03 at a steady pace, then quickly faster and faster up to 08:12,
+     where TRODAT pops (centred). Owner, 24 Nov: the wait was too long — 5,2 s → 2,8 s from the settled 08:00 to 08:12. TICK[k] = the wait before minute k + 1 (the first one = the settled pause on 08:00; was 520 ms, then one
      jump 08:00 → 08:12). After TRODAT the clock jumps to each arrival's own time as before (textAt) */
-  const TICK = [600, 700, 700, 700, 600, 480, 380, 300, 240, 190, 155, 130];
+  const TICK = [450, 550, 550, 340, 235, 170, 130, 105, 90, 80, 72, 68];
   const TKS = TICK.reduce((a, g) => (a.push((a.length ? a[a.length - 1] : CKT.HOLD + CKT.MOVE) + g), a), []);   /* tc of 08:01 … 08:12 */
   const JL0 = 170;                                                        /* 08:12, then TRODAT pops 0,17 s later */
   const A0 = TKS[TKS.length - 1] + JL0;                                   /* tc of message 1's pop */
@@ -11943,6 +11943,9 @@ window.__PFX="65";
      · then as before: an empty breath → the travel to the centre (the time held) → 06:37 → tick 06:38 → tick 06:39 → tick 06:40 → the
        pause → «Agora, o dia.» with NO change of time or date (the flip is gone): one continuous sequence into the day. P65's last
        picture (Wednesday 06:40) is unchanged.
+   Owner, 24 Nov — the last card no longer waits through the night («hangs for too long»): it is checked in the same rhythm as the ones
+       before it (Tuesday 18:36) and leaves; the clock does not stop, it runs fast through the night, alone on the screen, to Wednesday
+       06:36 (K.NIGHT from the last check), then the same breath and the travel to the centre.
    ONE painter, a pure function of the scene time T (ms): every card, label, the clock's text and pose. Moments only re-sync T to their
    mark (a click lands exactly on the next key mark; INSTANT / ← / deep links paint the mark directly).
    Reads window.P60 (60-1: field markup, freeze painter, clock markup + geometry). Root class .l6r.
@@ -12000,13 +12003,13 @@ window.__PFX="65";
     WAKE: 2750, WK: 1100,                                 /* colour back */
     M0: 3550, GMAX: 1150, GMIN: 110, GPOW: 4.5,           /* t4e §12: gaps slow → fast → slow, a flat-bottomed U over the richer collection */
     G0: 300, G1: 2500,                                    /* REV4 §35: the clock grows from the shell's corner to the upper-left pose with the pull back */
-    NIGHT: 3400,                                          /* FINAL: the gap before the last check = the night (≈ 18:25 → 06:36) */
-    CALM: 450, TRAVEL: 2600, BEAT: 1200, PAUSE: 1700, READ: 4500,   /* §36: an empty breath after the last check → the travel to the centre
+    NIGHT: 2600,                                          /* 24 Nov: from the last check (18:36) the clock runs alone to Wednesday 06:36 */
+    CALM: 450, TRAVEL: 2600, BEAT: 1200, PAUSE: 1700, READ: 4500,   /* §36: an empty breath once it reads 06:36 → the travel to the centre
                                                              (the time held) → 06:37 · tick 06:38 · tick 06:39 · tick 06:40 → the dramatic
                                                              pause → «Agora, o dia.» read (calma's 4,5 s) */
   };
   const EVEM = 18 * 60 + 36;                              /* §35: the afternoon's resolutions are spaced as before, on 15:06 → 18:36 */
-  const LASTM = 1440 + 6 * 60 + 36;                       /* FINAL: the last check lands on Wednesday 06:36 (minutes since Tue 00:00) */
+  const LASTM = 1440 + 6 * 60 + 36;                       /* FINAL: the night ends on Wednesday 06:36 (minutes since Tue 00:00) */
   let TL = null;
   /* t4d §9–§10: n resolutions in order (index 0 = the first after Antônio). Real time: the gap before resolution j follows a U —
      GMAX → GMIN in the middle → GMAX (slow → faster → slow, one by one at both ends). Clock time: each resolution has its own minute,
@@ -12015,33 +12018,34 @@ window.__PFX="65";
      those minutes (it starts with the evening, completes in the morning) */
   function marks(n) {
     const c = (n - 1) / 2, gap = j => K.GMIN + (K.GMAX - K.GMIN) * Math.pow(Math.abs(j - c) / Math.max(1, c), K.GPOW);
-    const R = []; let t = K.M0; for (let j = 0; j < n; j++) { if (j) t += j === n - 1 && n > 1 ? K.NIGHT : gap(j); R.push(t); }   /* FINAL: the last gap is the night */
+    const R = []; let t = K.M0; for (let j = 0; j < n; j++) { if (j) t += gap(j); R.push(t); }
     const span = EVEM - (15 * 60 + 6);                    /* 15:06 → 18:36 (the afternoon's spacing, unchanged) */
     const q = Math.pow(7, 1 / Math.max(1, n - 1)), a = span * (q - 1) / (Math.pow(q, Math.max(1, n)) - 1), MC = []; let mm = 15 * 60 + 6;   /* spacing ×7 first → last */
     for (let j = 0; j < n; j++) { mm += a * Math.pow(q, j); MC.push(mm); }
-    if (n) MC[n - 1] = LASTM;                             /* FINAL: … and the last one the next morning, Wednesday 06:36 */
-    const rB = R.length ? R[R.length - 1] : K.M0;         /* the last check (Beatriz, Wednesday 06:36) */
-    const HB = 1050, FB = 380;                            /* the last card's hold and fade (= model()'s for the last of the U) */
-    const NP0 = rB + HB + FB + K.CALM;                    /* every card is gone and the screen has breathed: the clock leaves the corner */
+    const rB = R.length ? R[R.length - 1] : K.M0;         /* the last check (Beatriz, Tuesday 18:36) */
+    const HB = 720, FB = 380;                             /* the last card's hold and fade (= model()'s for the last of the U) */
+    const rN = rB + Math.max(K.NIGHT, HB + FB);           /* 24 Nov: the night's end, Wednesday 06:36 (every card has left long before) */
+    const NP0 = rN + K.CALM;                              /* the screen has breathed on 06:36: the clock leaves the corner */
     const TC = NP0 + K.TRAVEL, NP1 = TC;                  /* … and lands in the centre at 06:37 */
     const ARR = TC + TICKS * K.BEAT, NOW = ARR + K.PAUSE, END = NOW + K.READ;   /* tick · tick · tick → 06:40 · pause · the line (no flip) */
-    return TL = { R, MC, n, rB, NP0, NP1, TC, ARR, NOW, END, TM: null, R3: R.slice(-3) };
+    return TL = { R, MC, n, rB, rN, NP0, NP1, TC, ARR, NOW, END, TM: null, R3: R.slice(-3) };
   }
   /* FINAL: midnight, during the night (the scene time at which the clock passes 00:00 — the date turns over there) */
   function midnight(m0) {
     const t = TL; if (!t || t.n < 2) return Infinity;
-    let lo = t.R[t.n - 2], hi = t.rB; if (minAt(lo, m0) >= 1440 || minAt(hi, m0) < 1440) return Infinity;
+    let lo = t.rB, hi = t.rN; if (minAt(lo, m0) >= 1440 || minAt(hi, m0) < 1440) return Infinity;
     for (let i = 0; i < 40; i++) { const x = (lo + hi) / 2; if (minAt(x, m0) < 1440) lo = x; else hi = x; }
     return hi;
   }
   /* the clock: minutes since Tue 00:00, monotone (Fritsch–Carlson) through 15:06 (Antônio's case closes; the clock starts with it) · every
-     resolution at its own minute · FINAL: the night between the previous resolution and the last (its secant is ~70× the afternoon's, so
-     the cubic leaves the evening at about twice the afternoon's pace, races through the small hours and lands on 06:36 with slope ≈ 0) ·
+     resolution at its own minute (the last at 18:36) · 24 Nov: the night after the last one (its secant is ~12× the afternoon's, so the
+     cubic leaves the evening at about twice the afternoon's pace, races through the small hours and lands on 06:36 with slope ≈ 0) ·
      06:36 held through the travel · 06:37 on landing · one minute per tick to 06:40 (slope 0: it settles) */
   function anchors(m0) {
     const t = TL, A = [[0, m0], [K.A_CHK, m0]];
     t.R.forEach((r, j) => A.push([r, t.MC[j]]));
-    A.push([t.NP0, LASTM + .4]);                          /* §35: 06:36 holds while the last card leaves and the screen breathes */
+    if (t.n) A.push([t.rN, LASTM]);                       /* 24 Nov: the clock alone, through the night */
+    A.push([t.NP0, LASTM + .4]);                          /* §35: 06:36 holds while the screen breathes */
     for (let n = 0; n <= TICKS; n++) A.push([t.TC + n * K.BEAT, LASTM + 1 + n]);   /* §36: the time held in flight → 06:37 · 06:38 · 06:39 · 06:40 */
     for (let i = 1; i < A.length; i++) { if (A[i][0] <= A[i - 1][0]) A[i][0] = A[i - 1][0] + 1; if (A[i][1] <= A[i - 1][1]) A[i][1] = A[i - 1][1] + .1; }
     const n = A.length, d = [], m = [];
@@ -12121,7 +12125,7 @@ window.__PFX="65";
     const O = cards.slice().sort((a, b) => b.i - a.i);
     const tro = O.find(k => k.i === 0); if (tro && O.length > 6) { O.splice(O.indexOf(tro), 1); O.splice(Math.floor(O.length / 2), 0, tro); }   /* TRODAT: mid-flow */
     marks(O.length);
-    O.forEach((k, j) => { k.r = TL.R[j]; const nx = j + 1 < O.length ? TL.R[j + 1] - TL.R[j] : 1500;
+    O.forEach((k, j) => { k.r = TL.R[j]; const nx = j + 1 < O.length ? TL.R[j + 1] - TL.R[j] : 400;   /* 24 Nov: the last one leaves promptly (held .72 s, was 1,05) */
       k.hold = Math.max(380, Math.min(1050, nx * 1.8)); k.fd = 380; k.labOn = true; });
     cards.forEach(k => { k.gone = k.r + k.hold + k.fd; });
     /* the labels: one overlay per card, in the field's own layer (so they share its zoom) */
@@ -12321,7 +12325,7 @@ window.__PFX="65";
       [0, c => { at(c, 0, t.END, true); }],                  /* t4e: no cap at the beat boundary — the clock never waits for R2 */
       key(K.K_A, c => at(c, K.K_A)),
       ...t.R3.map(r => key(r + 300, c => at(c, r + 300))),
-      [t.NP0, c => { at(c, t.NP0); autoNext(0); }],          /* REV4 §35 · FINAL: every card checked (the last on Wednesday 06:36), the screen empty → R2 */
+      [t.NP0, c => { at(c, t.NP0); autoNext(0); }],          /* 24 Nov: every card checked (the last at 18:36), the night run to Wednesday 06:36, the screen empty → R2 */
     ]); } });
   /* R2 · REV4 §36 · FINAL: the clock travels back to the centre, very large (the time held: Wednesday 06:36) → 06:37 → tick 06:38 → tick
      06:39 → tick 06:40 → a dramatic pause → «Agora, o dia.» (no change of time or date; the live day opens on this same 06:40) */
@@ -12858,7 +12862,7 @@ window.L5LOGO = {"svg": "<svg class=\"l5logo-svg\" viewBox=\"434.4 411.8 1293.4 
 /* ---- src/95-fim.js */
 window.__PFX="95";
 /* ============================================================ 95 · Part VI · the closing (R4-F, Scenes 32–34) — part V-fim, two beats, nothing after them
-     0  «Com a Infra, mais tempo para cuidar. / Menos tempo coordenando.» — said over the hospital we just watched (the 3D OI stays,
+     0  «Com a Infra, mais tempo para cuidar. / Mais pacientes cuidados.» — said over the hospital we just watched (the 3D OI stays,
         keep3d; a pale veil + the map's blur make it a quiet ground): the human consequence, where the care happens. Words unfold.
      1  the veil becomes the page; «Juntos, podemos fazer da Medicina Nuclear / o departamento mais bem operado / da Rede D'Or.» unfolds;
         it is read, it leaves, and the official Infra logo comes into focus — the presentation's final branding element (REV4 §56: it takes
@@ -12868,17 +12872,14 @@ window.__PFX="95";
 (function () {
   /* REV4 §56: the official logo (window.L5LOGO, generated from assets/infra-logo.svg by sim/mk-logo.py); sized by its box (95-fim.css) */
   const LOGO = () => window.L5LOGO.svg;
-  /* T5-R (§15): the second line must mean LESS TIME SPENT coordinating («para coordenar» read as less time AVAILABLE for it). VERS.t5c:
-     1 «Menos tempo coordenando.» (recommended: the gerund already says «spent doing»; the shortest, most spoken form of his own instinct)
-     2 «Menos tempo gasto coordenando.» (his option A, word for word) */
-  VERS.t5c = { label: 'Frase final', names: ['Menos tempo coordenando.', 'Menos tempo gasto coordenando.'], keys: ['a', 'b'], def: 1 };
-  const A1 = 'Com a Infra, mais tempo para cuidar.', A2s = ['Menos tempo coordenando.', 'Menos tempo gasto coordenando.'];
+  /* owner, 24 Nov: the second line is «Mais pacientes cuidados.» (was «Menos tempo coordenando.»; the t5c pill is gone with it), both bold */
+  const A1 = 'Com a Infra, mais tempo para cuidar.', A2 = 'Mais pacientes cuidados.';
   /* QA Q32: ONE sentence at ONE weight (confident and collaborative): «Juntos» is not a kicker and the superlative is not a headline */
   const B2 = ['Juntos, podemos fazer da Medicina Nuclear', "o departamento mais bem operado da Rede D'Or."];   /* straight ' as everywhere (K26) */
   let d = 0; const W = (s, step, d0) => { if (d0 != null) d = d0; const h = uwt(s, d, step); d += s.split(' ').length * step + 160; return h; };
   const html = () => `<div class="l5f">
       <canvas class="atm" width="1920" height="1000"></canvas>
-      <div class="ha uwp"><div class="a1">${W(A1, 85, 0)}</div><div class="a2">${W(A2s[ver('t5c') - 1] || A2s[0], 85, 760)}</div></div>
+      <div class="ha uwp"><div class="a1">${W(A1, 85, 0)}</div><div class="a2">${W(A2, 85, 760)}</div></div>
       <div class="msg uwp"><div class="m2">${W(B2[0], 75, 0)}</div><div class="m2">${W(B2[1], 75)}</div></div>
       <div class="sig"><div class="lg">${LOGO()}</div></div></div>`;
   /* atmosphere (round 2, Q review 1): ONE very large, very low-contrast field, computed per pixel and DITHERED (TPDF noise before quantisation),
