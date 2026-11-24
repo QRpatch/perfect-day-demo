@@ -912,6 +912,9 @@ svg.pp-av{border-radius:50%}
 /* §5: «Hoje, um exame é apenas um horário.» and its answer «Para a Infra, é um processo.» share ONE place: centred, on one line, above the centred agenda */
 #nar .nl.l1-today{left:0;right:0;top:100px;text-align:center}   /* QA Q10: the shell's top-centred standard (was 124) */
 #nar .nl.l1-today .n1{line-height:1.15}
+/* round 2b (Cruz): «Hoje…» arrives whole but softer (was the shell's .6 s); its exit keeps the shell's pace */
+#nar .nl.l1-today{transition:opacity 1.15s ease,transform 1.4s var(--ease),filter 1.15s ease}
+#nar .nl.l1-today.out{transition:opacity .6s ease,transform .9s var(--ease),filter .6s ease}
 /* t1b §1: «Hoje…» → «Para a Infra…» → «Mapeamos…» → «Em cada etapa…» share ONE place: the shell's top band, centred (higher than the
    round-1 270 px, so the resources can stand above the process; the lines replace each other in place, never jump sides) */
 /* REV4 §8: «Para a Infra, é um processo.» sits closer to the process (title only; the process, its labels and «Mapeamos…»'s place unchanged) */
@@ -919,8 +922,6 @@ svg.pp-av{border-radius:50%}
 /* BRIEF-FINAL §3 (owner: «Mapeamos…» «at the same height as the previous title, "Para a Infra, é um processo."»): it takes that line's
    place (top 270; it sat at the shell's top band, 100) — the two lines now replace each other in place, as t1b §1 meant them to */
 #nar .nl.l1-map{top:270px}
-/* §5 → §8: the question leaves first (quick, slight rise), then the answer arrives in the same place */
-#nar .nl.l1-quick.out{transition:opacity .18s ease,transform .24s ease,filter .18s ease}
 
 
 /* ---- the phone (R4): ONE element from Eduardo's first bubble to the calendar. Its picture = an inline transform set by JS (stage px of
@@ -4726,6 +4727,166 @@ window.__PFX="";
   };
 })();
 
+/* ---- kit/k11-ritmo.js */
+window.__PFX="";
+/* kit/k11-ritmo.js · Workstream B «ritmo» (Cruz, 23 Nov 2026 · BRIEF-TIMING.md) — the ONE table of the corrected autoplay holds.
+   Timing model (BRIEF-TIMING §10): every sequence is a chain of named phases — scene entry · initial reveal · reading hold · visual action ·
+   result hold · transition. A HOLD is always counted from the ACTUAL end of the visual change before it, so a moment's delay is
+   «anim + hold», where anim = the duration that change really takes (its CSS transition / tween, quoted from its stylesheet here) and
+   hold = Cruz's reading time. Longer holds, never slower animations (the one exception, asked in §8D: Maria's flight). No global multiplier:
+   only the moments named in the brief read this table; everything he called good keeps its own numbers in its own file.
+   Kit files load before every src/ part, so the parts read window.RIT directly. */
+(function () {
+  window.RIT = {
+    /* §A · Eduardo's questionnaire (src/10-1-paciente.js b2): five 2-s readings — the exam card «Cintilografia miocárdica» and each question */
+    Q: {
+      welcome: 1330,   /* .df.open → the welcome and its exam card fully in (.wel: opacity .55 s / transform .8 s, both after .5 s; measured 1,32 s) */
+      screen: 780,     /* phTo(i) → the question screen fully in (.fs: transform .55 s after .2 s; .top .4 s; .pbar .7 s; measured .78 s) */
+      read: 2000,      /* Cruz: «wait 2 full seconds» before Eduardo selects */
+      /* ritmo round 2 (Cruz, 23 Nov ~11:00, opening only): a person reading, not a form filling itself */
+      subIn: 700,      /* a revealed field («Até quando?», «Por quê?») fully in (.sub: opacity .5 s, transform .7 s) */
+      sub: 1400,       /* … then ≈ 1,5 s to read it before Eduardo answers it */
+      answered: 1300,  /* question 1 complete (Sim · 1 de janeiro · Viagem) held before question 2 (was .65 s) */
+      dayGap: 300,     /* question 2: one day selected every .3 s (owner, 24 Nov; Cruz had .65 s, rev5 .18 s) */
+      q3: 1000, q4: 1000, q5: 2000,   /* + reading time before the answer: questions 3 and 4 + 1 s, the long question 5 + 2 s */
+      q5seen: 600,     /* question 5's answer held a little longer before «Obrigado» … */
+      fin: 1000,       /* … and the finished questionnaire held 1 s longer before the calendar */
+    },
+    /* owner, 24 Nov: the title and «Primeiro, entendemos o paciente.» keep rev5's own timing (round 2's OPEN holds not brought in) */
+    /* ritmo round 2 · PART 2 (Cruz 23 Nov): one idea finishes, it leaves, a breath, the next appears (narration hand-offs only) */
+    P2: {
+      float: .86,      /* round 2c: the blue morning floats alone at 86 % of its slot before the agenda exists */
+      todayIn: 1150,   /* round 2c: «Hoje…»'s soft entrance (opacity 1,15 s) — RIT.wait counts from its REAL end … */
+      todayRead: 1000, /* … then ≈ 1 s to read it, then the agenda appears around the block */
+      procGap: 1400,   /* «Hoje…» and its agenda leave smoothly (.nl.out .6 s · .L1-conv .ag .8 s) → .5 s of air → the process + «Para a Infra…» */
+      nar: 1100,       /* a line leaves (.nl.out .6 s) → .5 s → the next line fades in (inside MIBI) */
+      mapRead: 1900,   /* «Mapeamos…»: nar 1,1 s + 1,9 s = the resources 3 s after the hand-over began (owner, 24 Nov; Cruz had 3,7 s, rev5 1,1 s) */
+    },
+    /* §B · «Hoje, um exame é apenas um horário.» · «Para a Infra, é um processo.» — +1 s each on the existing hold */
+    today: 2000, proc: 1000,   /* round 2 (Cruz, Part 2 §1): «Hoje…» one more second (round 1 + 1 s, round 2 + 1 s) */
+    /* §C · «E entendemos cada recurso a fundo…» (src/20-mibi.js) — +1 s */
+    resources: 1000,
+    /* §E · «Agora que temos todas as informações, construímos o calendário perfeito.» (src/30-dia.js) — +1 s */
+    calendar: 1000,
+    /* §3A · the four context lists (kit/k5-card.js DEL): each family fully in → 1 s → the next; the last → 1 s → «Os recursos dão forma…» */
+    CTX: { hold: 1000, last: 1000 },
+    /* §3B · the professionals descending (src/30-dia.js chain): landed + step adjusted + colours back → 2 s → the next one leaves */
+    INF: { hold: 2000 },
+    /* §4 · the resource grid (src/40-agenda.js B0/B1) */
+    GRID: {
+      built: 1260,     /* from .g-on: the new page complete at the latest of the camera's recession (ZM 1,6 s from «lift», 380 ms earlier),
+                          the row lines (.9 s after ≤ 360 ms), the hours (.6 s after ≤ 560 ms) — and RIT.wait takes whatever runs later */
+      blank: 3000,     /* A: the finished, empty grid held, nothing else entering (round 2, Part 4: + 1 s → the line on the 4th second) */
+      nar: 900,        /* an in-card line fully visible: .9 s transform (kit/k5-card.css); when it replaces one, RIT.wait also covers the 280-ms hand-over */
+      read: 3000,      /* B, C: the line fully visible → its blocks (round 2, Part 4: + 1 s each: the confirmed exams, the demand) */
+      ring: 620,       /* B: the confirmed blocks' soft blue ring (box-shadow .6 s; the pen ellipses appear at once — they never drew, before either) */
+      afterBk: 3000,   /* B: every confirmed exam in (and pointed at) → 3 s → «Também consideramos…» */
+      afterFc: 2000,   /* C: the expected demand in → 2 s → «E o exame do Eduardo nesse dia.» */
+      eduardo: 2000,   /* C: the hold before Eduardo's process drops into the grid (round 1 + 1 s, round 2 Part 4 + 1 s) */
+    },
+    /* §5 · Antes e depois (src/50-3-tetris.js, version V3 = the default) */
+    AD: {
+      line: 900,       /* a shell line (#nar .nl) fully visible: opacity .6 s, transform .9 s */
+      conflicts: 3000, /* B: «Mas havia conflitos por toda parte.» held 3 s once readable */
+      out: 600,        /* the line's exit (#nar .nl.out .6 s) before the transformation's own line comes in */
+      now: 2000,       /* C: «Agora fica assim.» readable → ≈ 2 s → the reorganization */
+      follow: 1000,    /* D: «Acompanhamos tudo até o dia do exame.» +1 s */
+      /* round 2 · PART 5 (Cruz 23 Nov): */
+      settled: 2000,   /* the reorganization completely finished (every piece still) → 2 s with «Agora fica assim.» → it leaves (was 3,8 s) … */
+      mgRead: 2000,    /* … straight into «Zero conflitos…» (no 3-s empty pause); fully visible → 2 s → the margins grow (was ≈ 5,5 s) */
+    },
+    /* §6 · Dora's message about Antônio, found and highlighted (src/60-1-sinais.js freeze) — +1 s */
+    antFound: 1000,
+    /* §7 · «Agora, olhamos para o dia de onde o Antônio saiu.» (src/60-2-des.js D2) */
+    VAGA: {
+      rise: 1000,      /* the title's rise to its place (.fa-ttl .rt transform 1 s) — the schedule only after it */
+      day: 1000,       /* the schedule's entrance (.l6d-day: opacity .7 s, transform 1 s) */
+      hold: 3000,      /* the whole schedule in → 3 s → Antônio leaves it */
+    },
+    /* §8 · «O que mais precisa ser ajustado agora?» (src/60-2b-decisao.js) */
+    DEC: {
+      q: 820,          /* the question fully in (.dq: opacity .5 s / transform .7 s after .12 s) */
+      qHold: 3000,     /* A: 3 s on the question alone */
+      sweepLead: 550,  /* the day's sweep starts this long before the first finding (as designed) */
+      issue: 500,      /* a finding fully in (.cf: transform .5 s) */
+      solution: 640,   /* an action resolved: «…» → result (.a1 .5 s, its fact .24 s + .4 s, the check .1 s + .45 s) */
+      hold: 2000,      /* B, C: 2 s after every finding and every solution */
+      emphAt: 200,     /* D: «Maria confirmou» resolved → 200 ms → a subtle emphasis of her card … */
+      emph: 800,       /* … (one soft swell, .l6c-emph) … */
+      emphHold: 1000,  /* … → 1 s → her process leaves the card */
+      fly: 1900,       /* D: the flight into the schedule, slower and smoother (was 1,05 s, cubic in-out) */
+      settle: 700,     /* the schedule updates (the row becomes Maria's: .nv/.n1 .15 s + .5 s) before the soft green row */
+    },
+    /* §9 · the final resolutions (src/65-resolve.js): +1 s after the first one before the others */
+    firstResolved: 1000,
+    /* ritmo round 2 · PART 3 (Cruz 23 Nov ~11:05, BRIEF-TIMING-P3.md): MIBI's way back → the calendar → Wednesday 2 Dec → its context.
+       Only these holds move; the conditions/preferences (§2) and «Os recursos dão forma ao processo.» (§7) keep their own numbers. */
+    P3: {
+      suspend: 2000,   /* §1 (src/20-mibi.js outFlow): the particles suspended with «E assim, entendemos…» FULLY visible ≥ 1 full second
+                          before the first particle leaves (lead ruling 23 Nov: the line is placed at T 5,1 s and fully in ≈ 6,0–6,4 s; the
+                          first departure was 5,42 s): the whole departure (their travel, the camera's slide right, the conditions card)
+                          and the key moment after it move 2 s later; the zoom-out, the emission, the line's own time and every path are
+                          unchanged */
+      calIn: 750,      /* §3 (src/30-dia.js): at .s-wk the calendar is still emerging (.t3-cal transform 1,6 s from .s-cal = CALIN after the
+                          dock, i.e. ≈ .75 s left; .t3-wk opacity .7 s) — RIT.wait takes whatever ends later */
+      calBlank: 2000,  /* §3: the empty calendar, formed and still → 2 full s → the first source acts (the filling, at its own pace) */
+      stripOut: 800,   /* §4: the strip (conditions + pills) leaves smoothly (.t3.s-ok .t3-src: opacity .7 s / transform .8 s, was .45 / .6) */
+      tenAfter: 1000,  /* §4: … fully gone → ≈ 1 s → «10 datas possíveis.» (the shell line's own fade-in) */
+      lineIn: 1280,    /* §5: nar()'s hand-over: «10 datas…» leaves, the new line is placed 380 ms later and is fully in .9 s after that */
+      actGap: 1000,    /* round 2b: + ≈ 1 s between the calendar's colouring actions (dias · hora · até · edu · manhã) */
+      pick: 1000,      /* §5: «Agora, vamos dar uma olhada em um desses dias.» fully in → 1 s → the 2 Dec nudge (→ the zoom, as before) */
+      ctxLine: 900,    /* §6: «Primeiro, o contexto do dia.» fully in (.k5-nar .nl: transform .9 s) */
+      ctx: 2000,       /* §6: … → 2 full s, nothing else entering → the four families (their own reveal, unchanged) */
+    },
+  };
+
+  /* ---------------------------------------------------------------- RIT.wait · a hold that starts at the ACTUAL end of a visual change
+     Called inside a moment: the NEXT moment's own delay (= the hold) is counted from the moment everything named here has finished, not
+     from this moment. «Finished» = at least `min` ms (the designed duration) AND no finite CSS transition/animation still running under
+     the given elements (Web Animations: transitions waiting on their delay count as running) AND every given promise (tweens) settled.
+     On a slow machine a transition that starts late therefore never eats into the reading time; on a fast one this is exactly `min`.
+       RIT.wait(c, { el: selector | Element | [..], tw: Promise | [..], min: ms, cap: ms })
+     Engine-safe: only on the engine's own timer path (never during INSTANT replays / deep links, never inside a click's jump), and only
+     if nothing has moved since (same beat, same navigation, the next moment still pending); capped (never an indefinite wait). The engine
+     is untouched: it pauses the next moment's timer (the shell's `timer`) and calls the shell's schedule() again when the change is done. */
+  let JUMP = 0;
+  const jr = window.jumpRun;
+  if (typeof jr === 'function') window.jumpRun = function () { JUMP++; try { return jr.apply(this, arguments); } finally { JUMP--; } };
+  const els = (c, e) => (Array.isArray(e) ? e : [e]).flatMap(x => !x ? [] : typeof x === 'string' ? (x[0] === '#' ? [...document.querySelectorAll(x)] : (c && c.$$ ? c.$$(x) : [...document.querySelectorAll(x)])) : [x]);
+  const live = list => { const out = [];
+    for (const el of list) { if (!el || !el.getAnimations) continue;
+      for (const a of el.getAnimations({ subtree: true })) { try {
+        if (a.playState === 'finished' || a.playState === 'idle') continue;
+        const t = a.effect && a.effect.getComputedTiming(); if (!t || !isFinite(t.endTime)) continue;   /* infinite loops (dots, spinners) never gate */
+        out.push(a); } catch (e) { /* */ } } }
+    return out; };
+  const sleep = ms => new Promise(r => setTimeout(r, Math.max(0, ms)));
+  async function done(c, o) {
+    const t0 = performance.now(), cap = o.cap || 6000, list = () => els(c, o.el);
+    const tw = (Array.isArray(o.tw) ? o.tw : [o.tw]).filter(p => p && p.then);
+    await sleep(o.min || 0);
+    if (tw.length) await Promise.race([Promise.all(tw.map(p => p.catch(() => {}))), sleep(cap)]);
+    for (let k = 0; k < 6; k++) {                                       /* a change may start a further one: look again */
+      const a = live(list()); if (!a.length) break;
+      const left = cap - (performance.now() - t0); if (left <= 0) break;
+      await Promise.race([Promise.all(a.map(x => x.finished.catch(() => {}))), sleep(left)]);
+      await new Promise(r => requestAnimationFrame(() => r()));
+    }
+    await sleep(24);                                                    /* the transitionend events land a frame after `finished`: count from them */
+  }
+  RIT.wait = function (c, o = {}) {
+    if (typeof INSTANT !== 'undefined' && INSTANT) return;
+    if (JUMP) return;                                                   /* a click completes / advances: never held up */
+    const b = B, n = NAVN, m = M;                                       /* M = this moment (the engine increments it after we return) */
+    queueMicrotask(() => {
+      if (B !== b || NAVN !== n || M !== m + 1 || M >= MSC(B).length) return;   /* moved on, or this was the beat's last moment */
+      clearTimeout(timer);                                              /* the next moment's timer, just armed by schedule() */
+      const W = RIT._w = { b, n, m };
+      done(ctx, o).then(() => { if (RIT._w !== W || B !== b || NAVN !== n || M !== m + 1) return; RIT._w = null; schedule(); });
+    });
+  };
+})();
+
 /* ---- kit/k2-proc.js */
 window.__PFX="";
 /* ============================================================================================================================
@@ -5894,7 +6055,18 @@ window.__PFX="";
     /* (the round-7 canopy layout «D1» was replaced by the lists, REV4 §18) */
     FIELDS.forEach(f => { f.ly = DL === 1 ? LST.HY : YO - f.s * (PX / 2 + 38); f.ry = DL === 1 ? LST.HY + LST.RL : f.ly + 19; });
   })();
-  const CTX = { FIELDS, ESC, DL, SC, IC: PX, ITEMS: [], gap: CTX_G, LST };
+  /* ritmo §3A (BRIEF-TIMING, Cruz 23 Nov: «this section needs more breathing room»): a family starts only once the previous one is
+     COMPLETE — its hairline (1 s), its name (60 ms + .8 s), its last row's words (row delay + 90 ms + .75 s) and its «+ …» line — plus
+     RIT.CTX.hold (1 s). Layout, members and every transition unchanged: only the start delays (DEL) move. CTX.revealEnd = the last family
+     complete (30-dia.js then holds RIT.CTX.last before «Os recursos dão forma ao processo.»). */
+  const famLen = f => { const n = f.it.length;
+    const rows = DL === 1 ? 300 + (n - 1) * 120 + 90 + 750 : 340 + (n - 1) * 110 + 150 + 750;
+    const more = DL === 1 && f.more ? 300 + n * 120 + 80 + 750 : 0;
+    return Math.max(1000, 60 + 800, rows, more); };
+  let REVEAL_END = 0;
+  if (window.RIT && RIT.CTX) { let t = 0; FIELDS.forEach((f, i) => { if (i) t += RIT.CTX.hold; f.d = t; t += famLen(f); }); REVEAL_END = t; }
+  else REVEAL_END = Math.max(...FIELDS.map(f => f.d + famLen(f)));
+  const CTX = { FIELDS, ESC, DL, SC, IC: PX, ITEMS: [], gap: CTX_G, LST, revealEnd: REVEAL_END };
   /* lists: the free lane left of the first column (the travelling copies leave the list through it: they never cross another row) and
      the lists' lowest ink (the «+ …» line included) */
   CTX.lane = DL === 1 ? FIELDS[0].x0 - LST.LANE : null;
@@ -6824,31 +6996,7 @@ window.__PFX="10-1";
 
   /* ---------------- the questionnaire (DemandForm v3 wording for questions 1–4; question 5 proposed) — round 3, counter unchanged
      («1 de 4 … 4 de 4» + «Mais uma pergunta»: 1–4 = Infra's real form, 5 = proposal); Dora's card says «Algumas perguntas rápidas» (lead) */
-  /* BRIEF-FINAL §2 (owner: «make his answers in the questionnaire slightly slower… give the viewer enough time to quickly read the
-     questions and see that he's answering them»). Measured on REV4: a question screen is fully in .75 s after phTo() (.fs: transform .55 s
-     after .2 s) and the finger touched it at .70–.85 s, i.e. ≈ 0 s of reading once the question was still; the revealed fields («Até
-     quando?», «Por quê?») were touched before they had finished arriving; the six days were tapped in one .55-s burst. Cruz's BRIEF-TIMING
-     §A answered the same moments with 2 full seconds of reading each (+ .65 s per day): ≈ 40 s for this beat. «Slightly slower» here
-     = a quick read: the question still and readable ≈ 0.8–1.3 s before the touch (longer for the long question 5), each revealed field
-     in and read, the days tapped one by one, and each completed answer seen for a moment before the next screen. Everything else —
-     the touches, the pills' flights, «Obrigado», the calendar — keeps its own timing. Numbers = ms from the previous moment (REV4 value). */
-  const QP = {
-    welcome: 1050,   /* «Olá, Eduardo!» + the exam card read before it is touched (600) */
-    q1: 1650,        /* «Precisa ser feito até alguma data?» → Sim (850) */
-    sub1: 700,       /* «Até quando?» in (.5–.7 s) → the date (350) */
-    sub2: 850,       /* «Por quê?» and its three chips → Viagem (550) */
-    a1: 900,         /* question 1 complete, seen → question 2 (650) */
-    q2: 1800,        /* «Em quais destes dias você pode vir?» + its hint → the first day (750) */
-    day: 180,        /* one more of his days every .18 s (110: a burst) */
-    days: 1150,      /* the last day selected (5 × .18 s + .35 s) → its pill leaves (850) */
-    cont2: 500,      /* → Continuar (450) */
-    q3: 1550,        /* «Algo impede nos outros dias?» + its hint → Trabalho (700) */
-    cont3: 650,      /* → Continuar (550) */
-    q4: 1450,        /* «Manhã ou tarde funciona melhor?» → Manhã (750) */
-    a4: 950,         /* Manhã and its pill seen → question 5 (750) */
-    q5: 1950,        /* «Se abrir um horário antes, quer ser avisado?» + hint + three long options → the answer (850) */
-    a5: 1050,        /* the answer and its pill seen → «Obrigado pela ajuda!» (850) */
-  };
+  /* the questionnaire's readings: RIT.Q (kit/k11-ritmo.js; Cruz's BRIEF-TIMING §A, taken by the owner on 24 Nov with the days at .3 s) */
   const RECAP = [['dias', 'Dias', 'Seg, Qua e Qui'], ['manha', 'Período', 'Manhã'], ['trab', 'Outros dias', 'Trabalho'],
     ['ate', 'Prazo', 'Até 1º de janeiro · viagem'], ['ant', 'Antecipar', 'Sim, com um dia de aviso']];
   const DF = () => `<div class="df"><div class="top"><span class="bk">${BACK}</span><span class="pbar"><i></i></span></div>
@@ -6862,7 +7010,7 @@ window.__PFX="10-1";
      <div class="sub" data-u="2"><div class="fl">Por quê?</div><div class="chips"><span>Cirurgia</span><span>Consulta médica</span><span data-c="cm">Viagem</span></div></div></div>
    <div class="fs r" data-i="2"><div class="eb">Pergunta 2 de 4</div><div class="tt">Em quais destes dias você pode vir?</div>
      <div class="ss">Toque nos dias que servem, ou arraste o dedo por vários.</div>
-     <div class="dgrid">${DOWN.map(d => `<div class="h">${d}</div>`).join('')}${DAYS.slice(0, 10).map((d, i) => `<div class="d" data-d="${i}" style="--dl:${yes(d) ? (Math.floor(i / 5) * 3 + [0, 2, 3].indexOf(i % 5)) * QP.day : 0}ms">${d.d}<small>${showM(d, i) ? d.m : DOWN[i % 5].toLowerCase()}</small></div>`).join('')}</div>
+     <div class="dgrid">${DOWN.map(d => `<div class="h">${d}</div>`).join('')}${DAYS.slice(0, 10).map((d, i) => `<div class="d" data-d="${i}" style="--dl:${yes(d) ? (Math.floor(i / 5) * 3 + [0, 2, 3].indexOf(i % 5)) * RIT.Q.dayGap : 0}ms">${d.d}<small>${showM(d, i) ? d.m : DOWN[i % 5].toLowerCase()}</small></div>`).join('')}</div>
      <div class="lnk">Qualquer um destes dias</div><div class="pbtn" data-b="2">Continuar</div></div>
    <div class="fs r" data-i="3"><div class="eb">Pergunta 3 de 4</div><div class="tt">Algo impede nos outros dias?</div>
      <div class="ss">Só se quiser contar. Pode marcar mais de um.</div>
@@ -7168,32 +7316,39 @@ window.__PFX="10-1";
      travels OUT of the phone to a column beside it: «Até 1º de janeiro» (the date) · «Seg · Qua · Qui» (the days) · «Manhã preferida» · «Pode
      antecipar». Every answer is a key (a click completes it). */
   const Q = s => `.L1-pat .fs${s}`;
+  /* ritmo §A (BRIEF-TIMING, Cruz 23 Nov): each question screen fully in (its slide) → 2 full seconds to read → Eduardo selects (the exam
+     card too: five readings). The sub-steps, the pills and the hand-over to the calendar keep their own timing. */
+  const QIN = (c, min) => RIT.wait(c, { el: '.L1-pat .df', min });   /* the next moment's delay (2 s) counts from the screen fully in */
+  const phIn = (c, i) => { phTo(c, i); QIN(c, RIT.Q.screen); };
   beat({ chap: 'Paciente', id: 'l1quest',
     m: [[0, c => c.$('.wa .lc').classList.add('tapd')],
       [300, c => { const df = c.$('.L1-pat .df'); df.classList.add('snap'); fromCard(c); void df.offsetWidth; df.classList.remove('snap'); void df.offsetWidth;
-        df.classList.add('open'); c.$('.wa .lc').classList.add('prs'); }],
-      [1300, c => {}, 'k'],                                            /* «Olá, Eduardo! Vamos agendar seu exame.» */
-      [QP.welcome, c => c.$('.L1-pat .exc').classList.add('tapd')],
+        df.classList.add('open'); c.$('.wa .lc').classList.add('prs'); QIN(c, RIT.Q.welcome); }],
+      [0, c => {}, 'k'],                                               /* «Olá, Eduardo! Vamos agendar seu exame.» fully in */
+      [RIT.Q.read, c => c.$('.L1-pat .exc').classList.add('tapd')],     /* ritmo §A: 2 s to read the exam card before he selects it */
       [180, c => c.$('.L1-pat .exc').classList.add('sel'), 'k'],
-      [700, c => phTo(c, 1), 'k'],
+      [700, c => phIn(c, 1), 'k'],
       /* 1 · «Precisa ser feito até alguma data?» Sim → 1 de janeiro (→ «Até 1º de janeiro») → Por quê? Viagem */
-      [QP.q1, c => tapSel(c, Q('[data-i="1"] [data-o="s"]'))],
-      [450, c => c.$('[data-u="1"]').classList.add('on')], [QP.sub1, c => tapSel(c, Q(' [data-u="1"] .fb'))],
+      [RIT.Q.read, c => tapSel(c, Q('[data-i="1"] [data-o="s"]'))],    /* ritmo §A: the question fully in → 2 s → Sim */
+      [450, c => { c.$('[data-u="1"]').classList.add('on'); RIT.wait(c, { el: '[data-u="1"]', min: RIT.Q.subIn }); }],
+      [RIT.Q.sub, c => tapSel(c, Q(' [data-u="1"] .fb'))],              /* ritmo round 2: «Até quando?» fully in → ≈ 1,5 s → the date */
       [300, c => pillOut(c, 'ate', c.$(Q(' [data-u="1"] .fb'))), 'k'],
-      [600, c => c.$('[data-u="2"]').classList.add('on')], [QP.sub2, c => tapSel(c, '[data-c="cm"]'), 'k'],
+      [600, c => { c.$('[data-u="2"]').classList.add('on'); RIT.wait(c, { el: '[data-u="2"]', min: RIT.Q.subIn }); }],
+      [RIT.Q.sub, c => tapSel(c, '[data-c="cm"]'), 'k'],                /* ritmo round 2: «Por quê?» fully in → ≈ 1,5 s → Viagem */
       /* 2 · «Em quais destes dias você pode vir?» his days (→ «Seg · Qua · Qui») → Continuar */
-      [QP.a1, c => phTo(c, 2)],
-      [QP.q2, c => c.$$('[data-i="2"] .d').forEach(d => { if (yes(DAYS[+d.dataset.d])) { tapAt(c, d, parseFloat(getComputedStyle(d).getPropertyValue('--dl')) || 0); d.classList.add('sel'); } })],
-      [QP.days, c => pillOut(c, 'dias', c.$(Q('[data-i="2"] .dgrid')))], [QP.cont2, c => tapPress(c, '[data-b="2"]'), 'k'],
+      [RIT.Q.answered, c => phIn(c, 2)],                                /* ritmo round 2: the complete answer held (was .65 s) */
+      [RIT.Q.read, c => { c.$$('[data-i="2"] .d').forEach(d => { if (yes(DAYS[+d.dataset.d])) { tapAt(c, d, parseFloat(getComputedStyle(d).getPropertyValue('--dl')) || 0); d.classList.add('sel'); } });
+        RIT.wait(c, { el: Q('[data-i="2"] .dgrid'), min: 5 * RIT.Q.dayGap + 350 }); }],   /* ritmo round 2: the six days one by one (RIT.Q.dayGap apart); the pill after the last */
+      [850, c => pillOut(c, 'dias', c.$(Q('[data-i="2"] .dgrid')))], [450, c => tapPress(c, '[data-b="2"]'), 'k'],
       /* 3 · «Algo impede nos outros dias?» Trabalho → Continuar */
-      [450, c => phTo(c, 3)], [QP.q3, c => tapSel(c, '[data-c="tr"]')], [QP.cont3, c => tapPress(c, '[data-b="3"]'), 'k'],
+      [450, c => phIn(c, 3)], [RIT.Q.read + RIT.Q.q3, c => tapSel(c, '[data-c="tr"]')], [550, c => tapPress(c, '[data-b="3"]'), 'k'],
       /* 4 · «Manhã ou tarde funciona melhor?» Manhã (→ «Manhã preferida») */
-      [450, c => phTo(c, 4)], [QP.q4, c => tapSel(c, Q('[data-i="4"] [data-o="m"]'))],
+      [450, c => phIn(c, 4)], [RIT.Q.read + RIT.Q.q4, c => tapSel(c, Q('[data-i="4"] [data-o="m"]'))],
       [300, c => pillOut(c, 'manha', c.$(Q('[data-i="4"] [data-o="m"]'))), 'k'],
       /* 5 · «Se abrir um horário antes, quer ser avisado?» Sim, com um dia de aviso (→ «Pode antecipar») */
-      [QP.a4, c => phTo(c, 5)], [QP.q5, c => tapSel(c, Q('[data-i="5"] [data-o="d"]'))],
+      [750, c => phIn(c, 5)], [RIT.Q.read + RIT.Q.q5, c => tapSel(c, Q('[data-i="5"] [data-o="d"]'))],
       [300, c => pillOut(c, 'ant', c.$(Q('[data-i="5"] [data-o="d"]'))), 'k'],
-      [QP.a5, c => phTo(c, 6)], [550, c => c.$('.fin .rc').classList.add('on'), 'k'], [1400, c => {}]] });   /* the four pills held with «Obrigado» */
+      [850 + RIT.Q.q5seen, c => phTo(c, 6)], [550, c => c.$('.fin .rc').classList.add('on'), 'k'], [1400 + RIT.Q.fin, c => {}]] });   /* ritmo round 2: + .6 s / + 1 s */   /* the four pills held with «Obrigado» */
   /* b3 · REV4 §5: the phone glides aside while the four pills rise to their place under the line (one movement, same curve) → the line
      arrives above them → a pause to read it → only then the calendar, blank → the steps (t1v: B = four, one per pill — default; A = the
      legacy two waves from the answer rows). Medium pace: each step lands and is held ≈ 1.2 s before the next pill lights. */
@@ -7229,24 +7384,31 @@ window.__PFX="10-1";
         s.classList.add('pre'); setS(s, { left: r.x, top: r.y, width: r.w, height: r.h });
         c.$('.L1-pat').classList.add('out'); say('');     /* R4: Scene 2's line leaves first (it sat higher than «Hoje…»: no overlap) */
       },
-      [520, c => { const s = c.$('.L1-conv .slot'); void s.offsetWidth; s.classList.remove('pre'); s.classList.add('on');
-        setS(s, { left: SLOT.x, top: SLOT.y, width: SLOT.w, height: SLOT.h }); c.$('.L1-conv').classList.add('on'); c.$('.L1-pat').classList.add('gone');
-        say('Hoje, um exame é apenas um horário.', '', { cls: 'l1-today' }); }],
-      [1350, c => c.$('.L1-conv').classList.add('busy'), 'k'], [1900, c => {}]] });
+      /* round 2c (Cruz): the blue morning floats alone, a little smaller (no agenda yet) → «Hoje…» → read ≈ 1 s → the agenda appears around
+         it and the same block grows into its slot (one transformation, the slot's own 1,25-s transition) */
+      [520, c => { const s = c.$('.L1-conv .slot'), k = RIT.P2.float; void s.offsetWidth; s.classList.remove('pre'); s.classList.add('on');
+        setS(s, { left: SLOT.x + SLOT.w * (1 - k) / 2, top: SLOT.y + SLOT.h * (1 - k) / 2, width: SLOT.w * k, height: SLOT.h * k }); c.$('.L1-pat').classList.add('gone');
+        say('Hoje, um exame é apenas um horário.', '', { cls: 'l1-today' }); RIT.wait(c, { el: '#nar', min: RIT.P2.todayIn }); }],
+      [RIT.P2.todayRead, c => { setS(c.$('.L1-conv .slot'), { left: SLOT.x, top: SLOT.y, width: SLOT.w, height: SLOT.h }); c.$('.L1-conv').classList.add('on'); }],
+      [1350, c => c.$('.L1-conv').classList.add('busy'), 'k'], [1900 + RIT.today, c => {}]] });   /* ritmo §B: +1 s on «Hoje…» */
   /* §8 · the same slot travels, stretches and unfolds into the process — directly in its final place: the spine of the resource oval.
      t1b §1: «Para a Infra, é um processo.» takes the place of «Hoje…» (the top band, centred; higher than before) and «Mapeamos…» will
      take ITS place: one explanation continuing, never jumping. */
   beat({ chap: 'Exame', note: NOTE_X,
-    m: [c => { sayCls('l1-quick', true); say(''); c.$('.L1-conv').classList.add('fade'); PTOK.layout(c); PTOK.at(c, 0); },
-      [230, c => say('Para a Infra, é um processo.', '', { cls: 'l1-proc' })],
+    /* ritmo round 2 (Part 2 §1): «Hoje…» and the agenda leave at their own pace (no quick exit), .5 s of air, then the slot travels into
+       the process and «Para a Infra…» fades in at the SAME top place as «Hoje…» */
+    m: [c => { say(''); c.$('.L1-conv').classList.add('fade'); PTOK.layout(c); PTOK.at(c, 0); },
+      [RIT.P2.procGap, c => say('Para a Infra, é um processo.', '', { cls: 'l1-proc' })],
       [70, c => { const s = c.$('.L1-conv .slot'), g = PM.res; s.classList.add('go'); setS(s, { left: g.x0, top: g.y, width: totalOf(PROC.d) * g.ppm, height: g.h }); }],
       [1000, c => { PROC.set('res'); PROC.show(true); c.$('#proc').classList.add('unf'); c.$('.L1-conv .slot').classList.add('gone'); PTOK.layout(c); }],
-      [850, c => c.$('#proc').classList.add('labs', 'unfd'), 'k'], [1500, c => {}]] });
+      [850, c => c.$('#proc').classList.add('labs', 'unfd'), 'k'], [1500 + RIT.proc, c => {}]] });   /* ritmo §B: +1 s on «Para a Infra…» */
   /* §9 · t1c §6: each step's small resources appear in a calm sweep from the start of the process: its short connector forms from the step's
      name, then its symbols arrive one by one (PTOK.grow, one tween, fn(1) = the final picture) */
   beat({ chap: 'Recursos', note: NOTE_R,
-    m: [c => { sayCls('l1-quick', true); say('Mapeamos o que cada etapa precisa, a cada momento.', '', { cls: 'l1-map' }); PROC.set('res'); PTOK.layout(c); c.$('.L-ptok').classList.add('on'); },
-      [1100, c => { const my = c.data.gr = {}; return PTOK.grow(c).then(() => { if (c.data.gr === my) c.data.gr = null; }); }, 'k'],
+    /* ritmo round 2 (Part 2 §2): «Para a Infra…» leaves smoothly → .5 s → «Mapeamos…» in the same place → the resources, 3 s after the hand-over began (owner, 24 Nov) */
+    m: [c => { say(''); PROC.set('res'); PTOK.layout(c); c.$('.L-ptok').classList.add('on'); },
+      [RIT.P2.nar, c => say('Mapeamos o que cada etapa precisa, a cada momento.', '', { cls: 'l1-map' })],
+      [RIT.P2.mapRead, c => { const my = c.data.gr = {}; return PTOK.grow(c).then(() => { if (c.data.gr === my) c.data.gr = null; }); }, 'k'],
       [6900, c => { PTOK.at(c, 1); }, 'k'], [1600, c => {}]] });
 })();
 
@@ -7680,7 +7842,7 @@ window.__PFX="20";
     m: [c => { say(''); camSet(c, CAM0); },
       [250, c => zoomLeft(c)],
       [2350, c => say(NAR_ZOOM, '', { cls: 'T2-top' }), 'k'],
-      [3600, () => { }, 'k']] });   /* the line (66 chars) read ≈ 3.6 s, then the dive */
+      [3600 + RIT.resources, () => { }, 'k']] });   /* the line (66 chars) read ≈ 3.6 s (rev5-ritmo · ritmo §C: + 1 s), then the dive */
 
   /* ================================================================ b1 · toward MIBI and through it; the universe appears
      T1e (Cruz, after t1d): the camera travels THROUGH MIBI. One continuous move, no stop in front of the object:
@@ -7776,7 +7938,8 @@ window.__PFX="20";
     }, LIN);
   }
   beat({ chap: 'MIBI', note: NOTE_U,
-    m: [c => { say('A Infra entende todas elas, e como se relacionam.', '', { cls: 'T2-top' }); uniLoop(c); },   /* Cruz (after t1d): a comma, no dash in any narration */
+    m: [c => { say(''); uniLoop(c); },                                  /* rev5-ritmo (ritmo round 2, Part 2 §5): the line before leaves, .5 s, then this one */
+      [RIT.P2.nar, c => say('A Infra entende todas elas, e como se relacionam.', '', { cls: 'T2-top' })],   /* Cruz (after t1d): a comma, no dash in any narration */
       /* the line is read first (a pause), only then the relations appear */
       [2100, c => relate(c), 'k'],
       [Math.round(RELT * 1000) + 1900, () => { }, 'k']] });
@@ -7885,7 +8048,8 @@ window.__PFX="20";
   const NOTE_Q = 'Fornecedor, entregas, estoque, preço e custo ilustrativos · decaimento: meia-vida do tecnécio-99m, 6 h.';
   const MQEND = MQ[MQ.length - 1][0] + 1900;                         /* the last pulse has found its answer and starts to rise */
   beat({ chap: 'MIBI', note: NOTE_Q,
-    m: [c => { say(BRIDGE, '', { cls: 'T2-top' }); uniLoop(c); },
+    m: [c => { say(''); uniLoop(c); },                                  /* rev5-ritmo (ritmo round 2, Part 2 §5): the line before leaves, .5 s, then this one */
+      [RIT.P2.nar, c => say(BRIDGE, '', { cls: 'T2-top' })],
       /* the line is read over the still network (medium: ≈ 3 s); it leaves, the question takes its place */
       [3000, c => say('')],
       [380, c => typeQ(c), 'k'],
@@ -7962,6 +8126,9 @@ window.__PFX="20";
   /* REV5: go0/pan0 + 2.4 s (the cloud waits ≈ 1.2 s, then the line — say —, then ≈ .9 s later the balls go right); card: no fixed time any more (it forms
      from the arrivals: cardPlan); fade = the map's fade-out end, relative to pan0 (unchanged: it was card − .05 = pan0 + 1.65) */
   const FL = { em0: 2.5, em1: 4.7, lift: [56, 150], go0: 7.4, goS: 1.15, goD: [2.0, 2.6], pan0: 7.9, panD: 3.6, PAN: 1340, say: 6.5, fade: 1.65, tail: .15 };
+  /* rev5-ritmo (Cruz 24 Nov · approved Part 3 §1): the particles stay suspended with «E assim, entendemos…» visible ≈ 1,9 s (fully in ≥ 1 full
+     second) before the first one leaves, as approved (Alexandre's line at 6,5 s and his paths unchanged; only the departure phase moves) */
+  const SUS = 1.0; FL.go0 += SUS; FL.pan0 += SUS;
   function sources(c) {
     const out = [];
     c.$$('.L-ptok .ptk').forEach(e => {
@@ -8216,7 +8383,7 @@ window.__PFX="20";
   }
   const NAR_C = 'E assim, entendemos quando o exame pode ser realizado.';   /* REV4 §15, Cruz's words */
   const NOTE_C = 'Etapas e durações do catálogo do Copa Star · entregas de MIBI (seg, qua e sex) ilustrativas · fechado 25 dez e 1 jan.';
-  const XT = () => 12.8;                                   /* ≈ the flow's length (s), for the key moment that follows it (REV5: plan.end measured 12.77 s; was 9.9) */
+  const XT = () => 12.8 + SUS;                                   /* ≈ the flow's length (s), for the key moment that follows it (REV5: plan.end measured 12.77 s; was 9.9) */
   beat({ chap: 'Condições', note: NOTE_C,
     m: [c => { c.data.path = null; c.data.u.dim = 0; c.$('.M-q').classList.remove('on'); say(''); uniLoop(c); },
       /* ONE continuous move: out of MIBI, the particles, to the right, into the conditions (slow: Part XIX B) */
@@ -9226,11 +9393,14 @@ window.__PFX="30";
   }
   /* the chain (Cruz, final round): descend → the step expands (highlighted, the others faded) → the colours come back → the NEXT resource
      leaves its row at that very instant. After Ricardo the beat's own moments take over (the lock). */
-  const RESTORE = 400;                                                    /* = the steps' colour transition back (CSS filter .4 s) */
   const NEXT = { CARD: 'NUR', NUR: 'TEC' };
+  /* ritmo §3B (BRIEF-TIMING, Cruz 23 Nov): the movement, the highlight and the expansion are unchanged; only the hand-over waits —
+     the resource has landed, its step has its new length and every colour is back (SETTLE: the steps' filter .4 s and the list row's
+     halo .6 s, measured ≈ .63 s) → RIT.INF.hold (2 s) → the next one leaves */
+  const IHOLD = RIT.INF.hold, SETTLE = 650;
   function chain(c, id) {
     if (INSTANT || !NEXT[id]) return; const w = WID;
-    later(() => { if (w === WID && !DONE[NEXT[id]]) influence(c, NEXT[id]); }, RESTORE);
+    later(() => { if (w === WID && !DONE[NEXT[id]]) influence(c, NEXT[id]); }, SETTLE + IHOLD);
   }
   /* the copy travels; the step changes from 60 % of the way */
   function travel(c, id) {
@@ -9262,7 +9432,7 @@ window.__PFX="30";
     later(() => { if (w !== WID || !live2(id)) return; endInf(c, id); chain(c, id); }, ADJ + (id === 'TEC' ? 300 : 0) + 380);
   }
   /* ms from a resource leaving its row to the next one leaving (= its contact + adjustment + settle + the colours' return) */
-  const CHAIN = id => Math.round(CONTACT * MT[id]) + ADJ + (id === 'TEC' ? 300 : 0) + 380 + RESTORE;
+  const CHAIN = id => Math.round(CONTACT * MT[id]) + ADJ + (id === 'TEC' ? 300 : 0) + 380 + SETTLE + IHOLD;   /* + settled + the 2-s hold (ritmo §3B) */
 
   /* ---------------------------------------------------------------- end states (idempotent; deep links / ← / a viewer's click) */
   /* shaped = the final process (Eduardo's day), every adjustment marked, every copy above its step */
@@ -9391,40 +9561,57 @@ window.__PFX="30";
       /* REV4 §16: both cards still (the last picture) → the line → the cards become the strip + the calendar → each source acts */
       c => { say(''); PROC.show(false); },
       [500, c => nar(c, TITLE7)],
-      [3900, c => { nar(c, ''); dock(c); }, 'k'],
-      [CALIN + 850, c => c.$('.t3').classList.add('s-wk')],
-      [550, c => act(c, 'dias'), 'k'],
-      [1150, c => { c.$('.t3').classList.add('s-band'); act(c, 'hora'); }],
-      [1200, c => act(c, 'ate'), 'k'],
-      [700, c => act(c, 'edu')],
-      [700, c => act(c, 'manha')],
+      [3900 + RIT.calendar, c => { nar(c, ''); dock(c); }, 'k'],          /* ritmo §E: + 1 s on the line */
+      /* ritmo round 2 · Part 3 §3: the calendar fully formed and still (its emergence and the weekdays, counted from their real end)
+         → 2 full s, the empty grid alone → the filling, at its own pace (was .55 s after the weekdays, before the calendar had landed) */
+      [CALIN + 850, c => { c.$('.t3').classList.add('s-wk'); RIT.wait(c, { el: ['.t3-cal', '.t3-src'], min: RIT.P3.calIn }); }],
+      [RIT.P3.calBlank, c => act(c, 'dias'), 'k'],
+      /* round 2b (Cruz): every action kept, in order, ≈ 1 s more between them (boom … boom … boom; the empty-grid pause above untouched) */
+      [1150 + RIT.P3.actGap, c => { c.$('.t3').classList.add('s-band'); act(c, 'hora'); }],
+      [1200 + RIT.P3.actGap, c => act(c, 'ate'), 'k'],
+      [700 + RIT.P3.actGap, c => act(c, 'edu')],
+      [700 + RIT.P3.actGap, c => act(c, 'manha')],
       /* the calendar is complete: the strip steps back, the result takes the line */
-      [1500, c => { calEnd(c); later(() => nar(c, '10 datas possíveis.'), 480); }, 'k'],
+      /* ritmo round 2 · Part 3 §4: the strip leaves smoothly → ≈ 1 s after it has fully gone → «10 datas possíveis.» (was 480 ms after
+         the strip began to leave: both at once); the calendar and its ten dates stay */
+      [1500, c => { calEnd(c); RIT.wait(c, { el: '.t3-src', min: RIT.P3.stripOut }); }, 'k'],
+      [RIT.P3.tenAfter, c => nar(c, '10 datas possíveis.')],
       [2000, c => {}],
     ] });
 
   /* Scene 8 + 9a · Qua 2 dez: the line is read, ONE zoom, inside the card the page line fades; the four fields unfold one at a time
      (Profissionais → Espaços e equipamentos → Materiais → Condições do dia: kit CSS delays 0 / 900 / 1650 / 2300 ms, ≈ 3.2 s) */
   const ZOOM = 1900;
-  const CTXHOLD = 600, PROCBEAT = 700;                                    /* REV5 item 6 (ms): the two lines' extra reading time */
+  const PROCBEAT = 700;                                                   /* REV5 item 6 (ms): the line's extra reading time */
   beat({ id: 't2start', chap: 'Quarta, 2 dez', note: 'Quarta-feira, 2 de dezembro: uma das 10 datas possíveis. Equipe e contexto do dia: nomes e figuras ilustrativos.',
     m: [
-      c => { c.$('.t3').classList.add('s-pick'); setCam(c, 0); nar(c, S7); },
+      /* ritmo round 2 · Part 3 §5 (CRITICAL order): «10 datas possíveis.» leaves → «Agora, vamos dar uma olhada…» → 1 full s after it
+         is fully in → the 2 Dec nudge (was at this beat's first moment, before the line) → the zoom, as before (1,95 s after the nudge) */
+      c => { setCam(c, 0); nar(c, S7); RIT.wait(c, { el: '#nar', min: RIT.P3.lineIn }); },
+      /* rev5-ritmo (Cruz 24 Nov: Alexandre's visuals, the approved order): the line fully in → 1 full s → Alexandre's 2 Dec pop → his zoom
+         (1,95 s after the pop, as he has it) */
+      [RIT.P3.pick, c => c.$('.t3').classList.add('s-pick')],
       [1950, c => enter(c, ZOOM), 'k'],
       [ZOOM + 150, c => nar(c, '')],
-      [380, c => say5(c, S9A)],
-      /* REV5 (BRIEF-FINAL item 6, owner: «Leave it there for a second»): the line fades in (.6 s) and then stands alone ≈ 1 s before the
-         four families (was 1 s after it BEGAN: ≈ .4 s fully read) */
-      [1000 + CTXHOLD, c => c.$('.k5-ctx').classList.add('on'), 'k'],
-      /* the four families take ≈ 3.2 s to unfold (compact, in the middle); the complete context then rests ≈ 1.2 s */
-      [5600, c => autoNext(300)],
+      /* Part 3 §6: «Primeiro, o contexto do dia.» fully in → 2 full s (was 1 s after it began) → the four families */
+      [380, c => { say5(c, S9A); RIT.wait(c, { el: '.t3-day .k5-nar', min: RIT.P3.ctxLine }); }],
+      /* ritmo §3A: the four families unfold one after another, 1 s apart once each is complete (K5.CTX.revealEnd ≈ 8,9 s: the moment's
+         own delay, so a click before it never skips the reveal); the complete context then rests 1 full second before «Os recursos dão
+         forma ao processo.» (the next beat's first moment, 300 ms after this one) */
+      [RIT.P3.ctx, c => c.$('.k5-ctx').classList.add('on'), 'k'],
+      [K5.CTX.revealEnd + RIT.CTX.last - 300, c => autoNext(300)],
     ] });
 
   /* Scene 9b · the resources shape the process: Dra. Natália · Helena Maria · Ricardo Mendes (each with its sentence), then THE LOCK
      (REV4 §19–§21). The chain starts each resource; its moment only guarantees it (it comes 150 ms later and finds it running). */
+  /* a viewer who clicks on while the families are still unfolding: the ones still waiting for their turn start now (.rest zeroes the
+     delays of new transitions only; the pending ones are moved past theirs), so they are all in before the process needs them */
+  const restLists = c => { const x = c.$('.t3 > .k5-ctx'); x.classList.add('on', 'rest');
+    if (!INSTANT && x.getAnimations) x.getAnimations({ subtree: true }).forEach(a => { try {
+      const t = a.effect.getComputedTiming(); if (t.delay > 0 && (a.currentTime || 0) < t.delay) a.currentTime = t.delay; } catch (e) { /* */ } }); };
   beat({ id: 't2seq', chap: 'Quarta, 2 dez', note: NOTE_DAY, m: [
     /* the lists stay exactly where they are; only the narration changes and the process appears beneath them */
-    c => { c.$('.t3').classList.add('entering', 'inside'); c.$('.t3 > .k5-ctx').classList.add('on', 'rest'); say5(c, S9B); },
+    c => { c.$('.t3').classList.add('entering', 'inside'); restLists(c); say5(c, S9B); },
     /* the generic exam process appears in that room — from its middle outwards. REV5 (BRIEF-FINAL item 6): one more short beat on «Os
        recursos dão forma ao processo.» before the process line appears below it (the line is fully in at ≈ .9 s: it is now read alone
        ≈ .8 s, was ≈ .1 s) */
@@ -9434,7 +9621,7 @@ window.__PFX="30";
     [CHAIN('CARD') + 150, c => influence(c, 'NUR'), 'k'],
     [CHAIN('NUR'), c => influence(c, 'TEC'), 'k'],
     /* §21 the lock: the copies sink, the marks resolve, the title, the colours and the frame */
-    [CHAIN('TEC') - 150 + 450, c => tailPrep(c), 'k'],                 /* +.45 s: Ricardo's sentence is read as long as the others */
+    [CHAIN('TEC') - 150 + 450, c => tailPrep(c), 'k'],                 /* ritmo §3B: Ricardo landed + adjusted → 2 s (in CHAIN) → the lock · Alexandre's +.45 s kept */
     [1150, c => marksOff(c)],
     [750, c => lineOn(c), 'k'],
     [1350, c => lock(c), 'k'],
@@ -9722,16 +9909,10 @@ window.__PFX="40";
      Cruz's lines («…já agendados para quarta-feira.» · «…a demanda que ainda deve chegar.», §22 «a title such as») lose «para quarta-feira»
      (the card's date stands right beside them) and «ainda»: at the slot's 34 px they were 951 / 913 px wide and ran into the header
      («…2 de dezembro» ends at x 446: 38 / 57 px of air, read as one line); now ≥ 100 px, like every other line of the card. */
-  /* FINAL item 7 (owner: «slow down this entire section a bit, like the previous slowed autoplay»; references: calma's CALM-T2 and Cruz's
-     BRIEF-TIMING §4 on origin/aprovado-23nov — same moments): lift 250 (unchanged: «O processo previsto…» is approved as it is) · the
-     board complete ≈ 1,65 s after the lift, then ≈ 2,7 s of the finished, still board (a beat to understand what it represents: the day's
-     resources × its hours, Eduardo's exam waiting at the top) → «Primeiro, olhamos…» (fully in after .9 s) → 2,5 s → the confirmed fill
-     in → all in → 3 s → «Também consideramos…» (in after ≈ 1,2 s) → 2,3 s → the likely demand arrives (≈ 3,2 s, slower than before:
-     each estimate is seen) → 2,5 s → the beat ends. Was est 1750 · read1 1500 · ring 200 + look1 2300 · read2 1250 · look2 1900. */
-  const B0T = { lift: 250, est: 4000, read1: 3400, look1: 3000, read2: 3500, look2: 2500 };
-  /* B1: «E o exame do Eduardo nesse dia.» in after ≈ 1,2 s → 2 s → Eduardo's exam enters (ENTRY ms) → 2,2 s with him in the day → B2
-     (was 1400 · 2600 · 1800). B2 (item 8): the line + the board's glide back to its place, then the panel and the search (was 1450). */
-  const B1READ = 3200, ENTP1 = 1500, ENTRY = ENTP1 + 2600 * .62, B1LOOK = 2200, B2READ = 1650, BLMS = 1150;
+  /* FINAL item 7 (owner: «slow down this entire section a bit»); 24 Nov: B0/B1's holds are Cruz's (RIT.GRID, kit/k11-ritmo.js) */
+  const B0T = { lift: 250 };
+  /* B1: Eduardo's exam enters (ENTRY ms). B2 (item 8): the line + the board's glide back to its place, then the panel and the search (was 1450). */
+  const ENTP1 = 1500, ENTRY = ENTP1 + 2600 * .62, B2READ = 1650, BLMS = 1150;
   beat({ chap: 'Encaixe', note: 'Linha do tempo por recurso: confirmados em ardósia, demanda prevista tracejada (probabilidade pelo histórico de quarta-feira, ilustrativa).',
     /* R3 §1.2: the sentence first, over R2's still picture (its labels stay while it is read) → the board forms (lift + rows) → the
        confirmed visits fill in → hold → «E a demanda…» alone → the likely demand fills in */
@@ -9750,21 +9931,23 @@ window.__PFX="40";
         c.cls('.c2-ctx', 'out'); c.cls('.c2-bufl', 'out');
         if (KP) { KP.el.classList.remove('labs'); KP.live(true); }
         if (buf) { buf.classList.remove('hid'); buf.classList.add('nolab'); }
-        if (INSTANT) zoomAt(c, 1); else tween(ZM, u => zoomAt(c, u), LIN); }],
+        if (INSTANT) zoomAt(c, 1); else c.data.zp = tween(ZM, u => zoomAt(c, u), LIN); }],
       /* QA/lead 06:52: the rows and labels FADE in (never pop) — a style pass first, and only once the process's labels have begun to leave */
-      [380, c => { const d = c.$('.l4-day'); if (!INSTANT) void d.querySelector('.l4-grid').offsetWidth; d.classList.add('g-on'); }],
-      /* T2 §10: the empty structure stands (rows ≈1.3 s, hours ≈1.2 s, the rise 1.25 s), a short still moment, THEN the line */
-      [B0T.est, c => { zoomAt(c, 1); nar(c, 'Primeiro, olhamos os exames já agendados.'); }, 'k'],
+      /* rev5-ritmo (Cruz 24 Nov · approved ritmo §4A / Part 4): the camera recedes and the new page builds → it is COMPLETE (RIT.wait: the
+         zoom tween and every transition of the page) → 3 full seconds of the finished, empty grid → only then the line */
+      [380, c => { const d = c.$('.l4-day'); if (!INSTANT) void d.querySelector('.l4-grid').offsetWidth; d.classList.add('g-on');
+        RIT.wait(c, { el: ['.l4-day', '.c2-ctx', '.c2-bufl', '.c2-plab', '#proc'], tw: c.data.zp, min: RIT.GRID.built }); }],
+      [RIT.GRID.blank, c => { zoomAt(c, 1); nar(c, 'Primeiro, olhamos os exames já agendados.'); RIT.wait(c, { el: '.k5-nar', min: RIT.GRID.nar }); }, 'k'],
       /* R3 §12.1: the line is read, then the confirmed visits fill in one after the other (FINAL item 7: no rings around them) */
-      [B0T.read1, c => { c.$('.l4-day').classList.add('bk-on'); revealKind(c, 'bk'); }],
-      [REV.bk.span, c => { settleKind(c, 'bk'); }],
-      [B0T.look1, c => { settleKind(c, 'bk'); nar(c, 'Também prevemos a demanda que deve chegar.'); }, 'k'],   /* sentence alone … · FINAL fix 1
+      [RIT.GRID.read, c => { c.$('.l4-day').classList.add('bk-on'); revealKind(c, 'bk'); }],   /* rev5-ritmo §4B: the line fully visible → 3 s → the confirmed */
+      [REV.bk.span, c => { settleKind(c, 'bk'); RIT.wait(c, { el: '.l4-day', min: 0 }); }],
+      [RIT.GRID.afterBk, c => { settleKind(c, 'bk'); nar(c, 'Também prevemos a demanda que deve chegar.'); RIT.wait(c, { el: '.k5-nar', min: RIT.GRID.nar }); }, 'k'],   /* all in → 3 s →   /* sentence alone … · FINAL fix 1
                                                                                  (review of item 7): «prevemos» — the line itself says the demand is
                                                                                  PREDICTED (was «consideramos»; the count-up alone was a quiet cue) */
-      [B0T.read2, c => { revealKind(c, 'fc'); c.$('.l4-day').classList.add('fl-on'); }, 'k'],                  /* … then the likely demand */
+      [RIT.GRID.read, c => { revealKind(c, 'fc'); c.$('.l4-day').classList.add('fl-on'); }, 'k'],   /* rev5-ritmo §4C: the line fully visible → 3 s →                  /* … then the likely demand */
       /* the reveal resolves before the beat counts as done: a click meanwhile completes it (never snaps into B1) */
-      [REV.fc.span, c => settleKind(c, 'fc'), 'k'],
-      [B0T.look2, c => {}]] });
+      [REV.fc.span, c => { settleKind(c, 'fc'); RIT.wait(c, { el: '.l4-day', min: 0 }); }, 'k'],
+      [Math.max(0, RIT.GRID.afterFc - ((window.RV && RV.hold) || 0)), c => {}]] });   /* rev5-ritmo §4C: the demand in → 2 s → «E o exame do Eduardo…» */
 
   /* ================================================================ B1 · §22 Eduardo enters the day */
   function entry(c, s) {
@@ -9797,13 +9980,13 @@ window.__PFX="40";
   beat({ id: 't2end', chap: 'Encaixe', note: `Durações do Eduardo ajustadas às pessoas do dia (ilustrativas). Primeiro encaixe viável: ${hm(START.t)}.`,
     /* R3 §13: the sentence alone first (top centre by `nar`), a moment to read it, then Eduardo's exam enters (animation unchanged) */
     m: [c => { settleKind(c, 'bk'); settleKind(c, 'fc'); nar(c, 'E o exame do Eduardo nesse dia.'); },   /* REV4 §22 (Cruz's words) */
-      [B1READ, c => { c.$('.l4-day').classList.add('me-on'); Object.values(c.data.el).forEach(el => { el.style.transition = 'none'; }); plabAt(c, false);
+      [1400 + RIT.GRID.eduardo, c => { c.$('.l4-day').classList.add('me-on');   /* rev5-ritmo (approved §4C/Part 4): the line → 3,4 s → Eduardo */ Object.values(c.data.el).forEach(el => { el.style.transition = 'none'; }); plabAt(c, false);
         /* R4: each act starts in ITS stage's colour as the process shows it (C1's day-specific blues, .k5-blue) and settles in Infra blue */
         c.data.stc = {}; c.$$('#proc .pr-s[data-k]').forEach(sg => { const v = getComputedStyle(sg).getPropertyValue('--c').trim(); if (v) c.data.stc[sg.dataset.k] = v; });
         tween(ENTRY, u => entry(c, u), LIN); }, 'k'],
       /* §39: the search follows by itself — R3: after 0,8 s (was 1,3): B2 now opens with its own reading pause over the still board */
-      /* REV4 §22: ≈ 1 s more to look at Eduardo in the day before the search starts (was 0,8 s); FINAL item 7: B1LOOK */
-      [ENTRY, c => { entry(c, 1); }, 'k'], [B1LOOK, c => { if (!(window.RV && window.AUTO && B >= AUTO.to)) autoNext(0); }]] });   /* T2 review page: the sequence ends with Eduardo placed */
+      /* REV4 §22: ≈ 1 s more to look at Eduardo in the day before the search starts (was 0,8 s) */
+      [ENTRY, c => { entry(c, 1); }, 'k'], [1800, c => { if (!(window.RV && window.AUTO && B >= AUTO.to)) autoNext(0); }]] });   /* T2 review page: the sequence ends with Eduardo placed */
 
 
   /* ================================================================ R2 · the SCRAMBLE (kit/k4-scramble.js) on OUR resource timeline
@@ -10601,7 +10784,7 @@ window.__PFX="50";
   /* FINAL item 9 (Alexandre 23 Nov): the rhythm from the landed day to «Zero conflitos…» (ms). The red arises row by row: the last row's
      marks start (CROWS − 1) × 180 ms after the first and take .5 s (50-3-tetris.css .ovm / .cfd) */
   const RED = (CROWS.length - 1) * 180 + 500;
-  const AD9 = { say: 2500, red: 2200, leave: RED + 1800, calm: 2500, now: 4200, seen: 3200 };
+  const AD9 = { red: 2200 };                                            /* the line's start → the red (the other holds: RIT.AD, kit/k11-ritmo.js) */
   window.AD3 = {
     html, lay, DESK_BOX,
     init: c => lay(c, 'sheet'),
@@ -10615,19 +10798,23 @@ window.__PFX="50";
       [Math.round(TF_T * 1000) + 120, c => landed(c), 'k'],               /* KEY: every piece landed on its resource */
       /* FINAL (Alexandre 23 Nov, BRIEF-FINAL item 9): the line FIRST, then the red — and the hand-offs between the titles a little quicker
          (≈ 15 %). Was: 3 s → the red → 5,1 s → the line → 5 s → it leaves → 3 s → «Agora». */
-      [AD9.say, () => line('Mas havia conflitos por toda parte.'), 'k'],  /* KEY: ≈ 2,5 s on the landed day, then the line (fully in after .9 s) … */
-      [AD9.red, c => lay(c, 'conf'), 'k'],                               /* KEY: … read alone ≈ 1,3 s, then the conflicts arise in red, row by row (≈ 1,4 s: six rows) */
-      [AD9.leave, () => say('')],                                        /* the completed red held ≈ 1,8 s with its line, then it leaves over the red … */
-      [AD9.calm, c => autoNext(0)],                                      /* … ≈ 2,5 s of calm on the red, then «Agora fica assim.» */
+      /* rev5-ritmo (Cruz 24 Nov: Alexandre's order and visuals, the approved holds — ritmo §5B / Part 5): ≈ 3 s on the landed day → the
+         line (fully in, RIT.wait) → read alone as Alexandre has it (2,2 s from its start) → the red, row by row (≈ 1,4 s, from its real
+         end) → 3 full seconds on the complete red WITH its line → it leaves → «Agora fica assim.» at once (no empty pause on the red) */
+      [3000, c => { line('Mas havia conflitos por toda parte.'); RIT.wait(c, { el: '#nar', min: RIT.AD.line }); }, 'k'],
+      [AD9.red - RIT.AD.line, c => { lay(c, 'conf'); RIT.wait(c, { el: '.l5t', min: RED }); }, 'k'],
+      [RIT.AD.conflicts, () => say('')],                                 /* the completed red held 3 s with its line, then it leaves … */
+      [RIT.AD.out, c => autoNext(0)],                                    /* … gone, then «Agora fica assim.» */
     ],
     /* beat B (T3c phase A): «Agora fica assim.» → the same eight exams move (patient by patient) → the line stays until the LAST piece has
        stopped (the narration never changes while blocks move). */
     B: () => [
       c => { say(''); c.note(NOTE_IN); },
-      [120, () => line('Agora fica assim.')],
-      [AD9.now, c => lay(c, 'move')],                                     /* FINAL item 9: «Agora fica assim.» ≈ 4,2 s before the pieces move (was 4,9) */
-      [MOVE + STAG * (INO.length - 1) + AD9.seen, () => say('')],        /* every piece has stopped; the moved day held ≈ 3,2 s with its line (was 3,8) → it leaves … */
-      [AD9.calm, c => autoNext(0)],                                       /* … ≈ 2,5 s of calm (was 3), then the conclusion on the settled day */
+      /* rev5-ritmo (approved Part 5): readable → 2 s → the reorganization → every piece still → 2 s → it leaves → the conclusion at once */
+      [120, c => { line('Agora fica assim.'); RIT.wait(c, { el: '#nar', min: RIT.AD.line }); }],
+      [RIT.AD.now, c => { lay(c, 'move'); RIT.wait(c, { el: '.l5t', min: MOVE + STAG * (INO.length - 1) }); }],
+      [RIT.AD.settled, () => say('')],
+      [RIT.AD.out, c => autoNext(0)],
     ],
     /* beat C (T3c, Cruz's third round): statement → understanding → visual proof → result.
        phase B: ONE line «Zero conflitos. E ainda sobra margem para imprevistos.» on the clean settled day, NO margin yet, a moment to read;
@@ -10635,8 +10822,8 @@ window.__PFX="50";
        as the end of that animation; a brief hold. No checks, no hairline (the clean day speaks for itself). */
     C: () => [
       c => { say(''); c.note(NOTE_MG); },
-      [100, () => line('Zero conflitos. E ainda sobra margem para imprevistos.'), 'k'],
-      [6400, c => lay(c, 'buf'), 'k'],                                    /* REV4 §25 (calma): the 54-character conclusion ≥ 5,9 s, then the margins grow (≈ 1,4 s) */
+      [100, c => { line('Zero conflitos. E ainda sobra margem para imprevistos.'); RIT.wait(c, { el: '#nar', min: RIT.AD.line }); }, 'k'],
+      [RIT.AD.mgRead, c => lay(c, 'buf'), 'k'],                           /* rev5-ritmo (approved Part 5): fully visible → 2 s → the margins grow */
       [1250, c => lay(c, 'met'), 'k'],                                    /* KEY: the number, as the last margin finishes */
       [1100, c => hurry(c.$('.l5t')), 'k'],                               /* hold on the completed screen */
     ].concat(AUTO.on ? [[2700, c => { }]] : []),                          /* autoplay: the margins and their number held ≈ 3,8 s (+ calma's 3 s part
@@ -11262,7 +11449,7 @@ window.__PFX="60";
 
   /* ---------------------------------------------------------------- the part */
   /* t4b: decided A (pill retired). REV4 §26: the sentence and its transition into the clock are kept exactly (2,3 s to read) */
-  const OPEN = () => ['Acompanhamos tudo até o dia do exame.', 2300];
+  const OPEN = () => ['Acompanhamos tudo até o dia do exame.', 2300 + RIT.AD.follow];   /* ritmo §5D: + 1 s */
   part('III-sinais', {
     act: 'III', handoff: 'fade',
     html: c => { LAY = null; return `<div class="l6s">${html()}${clockHTML(...btText(T0 - D0))}${DPH.html('ant', { chat: (D().chat || {}).ant, time: ANT().t })}</div>`; },
@@ -11283,7 +11470,7 @@ window.__PFX="60";
       [A0, c => s1At(c, A0), 'k'],                                     /* KEY: settled upper-left · 08:12 · TRODAT */
       [A[1], c => s1At(c, A0 + A[1]), 'k'],                            /* KEY: 14:36 · Beatriz */
       [TA - A[1], c => freeze(c), 'k'],                                /* KEY: … 15:01 · Antônio — everything stops */
-      [1000, c => { c.$('#l6sA').classList.add('fo'); glide(c); shrink(c); }],   /* calma (§30): 0,52 → 1,0 s on the frozen frame */
+      [1000 + RIT.antFound, c => { c.$('#l6sA').classList.add('fo'); glide(c); shrink(c); }],   /* calma (§30): 1,0 s on the frozen frame · ritmo §6: + 1 s */
       [300, c => { c.$('#l6sAnt').classList.add('ph'); }],
       [220, c => { DPH.place('ant', 'center', { snap: true }); DPH.msg('ant', 0, true); }],
       [600, c => { DPH.msg('ant', 1, true); c.$('#l6sAnt').classList.add('sw', 'gone'); c.$('#l6sA').classList.add('gone'); c.data.done = true; }, 'k'],
@@ -11645,9 +11832,11 @@ window.__PFX="60";
       c => cardOn(c),                                                          /* one motion, 1,5 s: the screen becomes a card, to the left */
       [1250, c => S(c, 'cdim')],                                               /* it recedes as it settles: resolved */
       [650, c => { ttl(c, 'on'); c.clock(...CLK('15:04')); }, 'k'],             /* the next question, in the right half */
-      [3800, c => ttl(c, 'up')],                                               /* CALM: read, then it rises */
-      [700, c => S(c, 'day'), 'k'],                                            /* the Wednesday he left */
-      [1200, c => S(c, 'cx')],                                                 /* his row */
+      /* ritmo §7 (BRIEF-TIMING, Cruz 23 Nov): the line rises to its place → only then the schedule appears → the whole schedule in → 3 full
+         seconds → only then Antônio leaves it (his row) and the vacancy opens (every step from its real end: RIT.wait) */
+      [3800, c => { ttl(c, 'up'); RIT.wait(c, { el: '.fa-ttl', min: RIT.VAGA.rise }); }],   /* CALM: read, then it rises */
+      [0, c => { S(c, 'day'); RIT.wait(c, { el: '.l6d-day', min: RIT.VAGA.day }); }, 'k'],   /* the Wednesday he left */
+      [RIT.VAGA.hold, c => S(c, 'cx')],                                        /* his row */
       [800, c => S(c, 'hole'), 'k'],                                           /* «Vaga» */
       [3800, () => {}],                                                        /* CALM: the vacancy registers */
     ] });
@@ -11862,17 +12051,23 @@ window.__PFX="60";
     const s = c.$('.l6d-day .scan'); if (!s || INSTANT) return; const G = P().G, x0 = G.LX, x1 = G.w - G.RX;
     tween(1250, u => { s.style.transform = `translateX(${(x0 + (x1 - x0) * u).toFixed(1)}px)`; s.style.opacity = (Math.sin(Math.PI * u) * .75).toFixed(3); }, x => x).then(() => { s.style.opacity = '0'; });
   }
-  /* D3 · fast: the mark + the question → the sweep → three findings (≈ .45 s apart) → the mark settles → on to the actions */
+  /* ritmo §8 (BRIEF-TIMING, Cruz 23 Nov: «calm, precise, intelligent — not a rapid-fire list»): every step is held from its REAL end
+     (RIT.wait): the question fully in → 3 s alone (the mark thinking; the sweep reads the day just before the first finding, as designed)
+     → finding 1 fully in → 2 s → finding 2 → 2 s → finding 3 → 2 s → solution 1 resolved → 2 s → solution 2 → 2 s → solution 3 («Maria
+     confirmou») → her card held (≈ 1 s) → 1 s → her process travels into the schedule (slower, smoother) → the day updates → held */
+  const DT = RIT.DEC;
+  const inRow = (c, i, min, ...more) => RIT.wait(c, { el: [row(c, i), ...more], min });
+  /* D3 · the mark + the question → 3 s → the sweep → three findings, 2 s apart → the mark settles → on to the actions */
   function findMoments() {
     const S = P().S;
     return [
-      c => { S(c, 'qon'); P().spin(c, mark(c), true, 640); },
-      [900, c => sweep(c)],
-      [550, c => on(c, 0, 'fo'), 'k'],                                          /* the dose already ordered */
-      [450, c => on(c, 1, 'fo')],                                               /* the box reserved */
-      [450, c => { on(c, 2, 'fo'); S(c, 'L-fill'); }, 'k'],                     /* Maria asked for an earlier time: she fits (her silhouette in the vacancy) */
+      c => { S(c, 'qon'); P().spin(c, mark(c), true, 640); RIT.wait(c, { el: '.fa-q', min: DT.q }); },
+      [DT.qHold - DT.sweepLead, c => sweep(c)],
+      [DT.sweepLead, c => { on(c, 0, 'fo'); inRow(c, 0, DT.issue); }, 'k'],     /* the dose already ordered */
+      [DT.hold, c => { on(c, 1, 'fo'); inRow(c, 1, DT.issue); }],                /* the box reserved */
+      [DT.hold, c => { on(c, 2, 'fo'); S(c, 'L-fill'); inRow(c, 2, DT.issue, '.l6d-day .row.ant'); }, 'k'],   /* Maria asked for an earlier time: she fits (her silhouette in the vacancy) */
       [650, c => { P().spin(c, mark(c), false); P().sig(mark(c)); }],
-      [300, c => autoNext(1300)],
+      [300, c => autoNext(Math.max(0, DT.hold - 950))],                        /* 2 s after the third finding: the first action */
     ];
   }
   /* Maria's process leaves her action and settles into the vacancy (round 3's miniature, from the pill instead of her phone) */
@@ -11887,7 +12082,8 @@ window.__PFX="60";
     const px = v => v.toFixed(1) + 'px';
     Object.assign(f.style, { left: px(a.x), top: px(a.y), width: px(a.w), height: px(a.h) });
     f.className = 'vfly on grow';
-    return tween(1050, u => { Object.assign(f.style, { left: px(a.x + (to.x - a.x) * u), top: px(a.y + (to.y - a.y) * u - Math.sin(u * Math.PI) * 46), width: px(a.w + (to.w - a.w) * u), height: px(a.h + (to.h - a.h) * u) }); }, EIO);
+    /* ritmo §8D: slower and smoother (1,05 s cubic in-out → 1,9 s sine in-out: half the peak speed, the same arc) */
+    return tween(RIT.DEC.fly, u => { Object.assign(f.style, { left: px(a.x + (to.x - a.x) * u), top: px(a.y + (to.y - a.y) * u - Math.sin(u * Math.PI) * 46), width: px(a.w + (to.w - a.w) * u), height: px(a.h + (to.h - a.h) * u) }); }, x => .5 - .5 * Math.cos(Math.PI * CL(x)));
   }
   /* it lands: the row becomes Maria's (round 3's vin/after/vok) while the miniature fades on it (a cross-fade, no gap) */
   function land(c) { const S = P().S; S(c, 'L-fill', false); S(c, 'vin'); S(c, 'after'); const f = c.$('.vfly'); if (!f) return;
@@ -11897,13 +12093,14 @@ window.__PFX="60";
     const S = P().S, CLK = P().CLK;
     return [
       c => { S(c, 'acts'); on(c, 0, 'go'); },                                   /* → Vanessa */
-      [1150, c => on(c, 0, 'dn'), 'k'],                                         /* ✓ Vanessa avisada */
-      [650, c => on(c, 1, 'go')],                                               /* → the reservation */
-      [950, c => on(c, 1, 'dn'), 'k'],                                          /* ✓ Reserva liberada */
-      [650, c => on(c, 2, 'go')],                                               /* → Dora offers 10:30 to Maria */
-      [1700, c => { on(c, 2, 'dn'); c.clock(...CLK('15:06')); }, 'k'],          /* ✓ Maria confirmou */
-      [500, c => { const t = fly(c); if (t && t.then) t.then(() => { if (c.el.isConnected) land(c); }); }],
-      [1080, c => land(c)],                                                     /* her exam in the vacancy; the day re-plans around it */
+      [1150, c => { on(c, 0, 'dn'); inRow(c, 0, DT.solution); }, 'k'],          /* ✓ Vanessa avisada */
+      [DT.hold, c => on(c, 1, 'go')],                                           /* → the reservation */
+      [950, c => { on(c, 1, 'dn'); inRow(c, 1, DT.solution); }, 'k'],           /* ✓ Reserva liberada */
+      [DT.hold, c => on(c, 2, 'go')],                                           /* → Dora offers 10:30 to Maria */
+      [1700, c => { on(c, 2, 'dn'); c.clock(...CLK('15:06')); inRow(c, 2, DT.solution); }, 'k'],   /* ✓ Maria confirmou */
+      [DT.emphAt + DT.emph, () => {}],                                         /* rev5-ritmo: her card held (the approved hold; Alexandre's visuals: no swell) */
+      [DT.emphHold, c => { const t = fly(c); if (t && t.then) t.then(() => { if (c.el.isConnected) land(c); }); RIT.wait(c, { tw: t, min: DT.fly }); }],
+      [0, c => { land(c); RIT.wait(c, { el: '.l6d-day', min: DT.settle }); }],  /* her exam in the vacancy; the day re-plans around it */
       [300, c => S(c, 'vok'), 'k'],                                             /* the soft green row */
       [3800, () => {}],                                                         /* CALM: the repaired day, held (no recap) */
     ];
@@ -11999,9 +12196,11 @@ window.__PFX="65";
   /* REV4: calma's pull back and U ends (origin/calma: Z1 1900 → 2500, Antônio and the wake +0,6 s, GMAX 900 → 1150) */
   const K = {
     Z0: 150, Z1: 2500,                                    /* the outcomes converge into the field · the field returns (pull back) */
-    A_CHK: 2350, A_SOFT: 2550, A_LAB: 2700, K_A: 2900, A_OUT: 3450, A_FD: 480,   /* Antônio: the newest, the first to resolve */
+    /* rev5-ritmo (approved ritmo §9): the first item (Antônio) resolved → + 1 full second, resolved card still in place → then it leaves and
+       the others resolve in the existing sequence (A_OUT and M0 move together, everything after them follows) */
+    A_CHK: 2350, A_SOFT: 2550, A_LAB: 2700, K_A: 2900, A_OUT: 3450 + RIT.firstResolved, A_FD: 480,   /* Antônio: the newest, the first to resolve */
     WAKE: 2750, WK: 1100,                                 /* colour back */
-    M0: 3550, GMAX: 1150, GMIN: 110, GPOW: 4.5,           /* t4e §12: gaps slow → fast → slow, a flat-bottomed U over the richer collection */
+    M0: 3550 + RIT.firstResolved, GMAX: 1150, GMIN: 110, GPOW: 4.5,           /* t4e §12: gaps slow → fast → slow, a flat-bottomed U over the richer collection */
     G0: 300, G1: 2500,                                    /* REV4 §35: the clock grows from the shell's corner to the upper-left pose with the pull back */
     NIGHT: 2600,                                          /* 24 Nov: from the last check (18:36) the clock runs alone to Wednesday 06:36 */
     CALM: 450, TRAVEL: 2600, BEAT: 1200, PAUSE: 1700, READ: 4500,   /* §36: an empty breath once it reads 06:36 → the travel to the centre
